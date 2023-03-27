@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fa">
+    <head>
+        <%- include("./includes/head") %>
+    </head>
+
+    <body>
+        <div class="container-fluid g-0">
+            <%- include("./includes/header.ejs") -%>
+            <% var products = [{name:"محصول یک", description:"توضیحات محصول", price:22000},{name:"محصول یک", description:"توضیحات محصول", price:22000},{name:"محصول یک", description:"توضیحات محصول", price:22000},{name:"محصول یک", description:"توضیحات محصول", price:22000},{name:"محصول یک", description:"توضیحات محصول", price:22000},{name:"محصول یک", description:"توضیحات محصول", price:22000}] %>
+            <div class="container p-2" id="special-products">
+                <h5 class="h5 text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-award-fill" viewBox="0 0 16 16">
+                        <path
+                            d="m8 0 1.669.864 1.858.282.842 1.68 1.337 1.32L13.4 6l.306 1.854-1.337 1.32-.842 1.68-1.858.282L8 12l-1.669-.864-1.858-.282-.842-1.68-1.337-1.32L2.6 6l-.306-1.854 1.337-1.32.842-1.68L6.331.864 8 0z" />
+                        <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z" />
+                    </svg>
+                    محصولات ویژه
+                </h5>
+                <hr>
+                <div class="row justify-content-start m-auto">
+                    <% products.forEach((product)=> { %>
+                        <div class="card col-auto m-2 p-0">
+                            <img class="card-img-top" src="images/products/graphic_book.jpg" alt="image">
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <h5 class="h5">
+                                        <%= product.name %>
+                                    </h5>
+                                </div>
+                                <div class="card-text">
+                                    <p>
+                                        <%= product.description %>
+                                    </p>
+                                </div>
+                                <p class="text-muted">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-tags-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
+                                        <path
+                                            d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043-7.457-7.457z" />
+                                    </svg>
+                                    <%= product.price %> تومان
+                                </p>
+                                <button class="col-12 btn btn-primary">خرید</button>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+
+            <div class="container p-2 mt-4" id="products">
+                <h5 class="h5 text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-award-fill" viewBox="0 0 16 16">
+                        <path
+                            d="m8 0 1.669.864 1.858.282.842 1.68 1.337 1.32L13.4 6l.306 1.854-1.337 1.32-.842 1.68-1.858.282L8 12l-1.669-.864-1.858-.282-.842-1.68-1.337-1.32L2.6 6l-.306-1.854 1.337-1.32.842-1.68L6.331.864 8 0z" />
+                        <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z" />
+                    </svg>
+                    محصولات
+                </h5>
+                <hr>
+                <div class="row justify-content-start m-auto">
+                    <% products.forEach((product)=> { %>
+                        <div class="card col-auto m-2 p-0">
+                            <img class="card-img-top" src="images/products/graphic_book.jpg" alt="image">
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <h5 class="h5">
+                                        <%= product.name %>
+                                    </h5>
+                                </div>
+                                <div class="card-text">
+                                    <p>
+                                        <%= product.description %>
+                                    </p>
+                                </div>
+                                <p class="text-muted">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-tags-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
+                                        <path
+                                            d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043-7.457-7.457z" />
+                                    </svg>
+                                    <%= product.price %> تومان
+                                </p>
+                                <button class="col-12 btn btn-primary">خرید</button>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+
+        <%- include("./includes/footer.ejs") %>
+    </body>
+</html>

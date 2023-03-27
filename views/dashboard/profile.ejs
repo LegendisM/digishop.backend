@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <%- include("../includes/head") %>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <%- include("../includes/dashboard/header.ejs") -%>
+
+            <div class="d-flex justify-content-center pt-4">
+                <%- include("../includes/alerts.ejs") %>
+            </div>
+
+            <main class="d-flex justify-content-center pt-4">
+                <div class="card col-6 p-4">
+                    <div class="row">
+                        <div class="col-5 d-flex align-items-center">
+                            <div class="col">
+                                <div class="card">
+                                    <img class="card-img-top rounded" src="/images/about/cover.jpg" alt="">
+                                    <div class="card-img-overlay d-flex align-items-end">
+                                        <button class="btn btn-danger shadow-lg col-12">انتخاب عکس</button>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-1">
+                                    <small class="text-muted">* حداکثر حجم عکس 2 مگابایت می باشد </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <form action="post" method="/profile">
+                                <div class="form-group">
+                                    <label for="username">نام کاربری</label>
+                                    <input class="form-control mt-1" type="text" name="username" id="username">
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="email">پست الکترونیکی</label>
+                                    <input class="form-control mt-1" type="text" name="email" id="email">
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="password">رمز عبور</label>
+                                    <input class="form-control mt-1" type="text" name="password" id="password">
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="password-repeat">تکرار رمز عبور</label>
+                                    <input class="form-control mt-1" type="text" name="password-repeat"
+                                        id="password-repeat">
+                                </div>
+                                <button class="btn btn-primary mt-3">اعمال تغییرات</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+    </div>
+</body>
+
+</html>
