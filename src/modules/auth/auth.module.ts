@@ -3,9 +3,12 @@ import { UserModule } from "../user/user.module";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { JwtModule } from "@nestjs/jwt";
+import { LanguageModule } from "../language/language.module";
+import { AuthLanguageStorage } from "./auth.language";
 
 @Module({
     imports: [
+        LanguageModule.register(AuthLanguageStorage),
         UserModule,
         JwtModule.register({
             secret: process.env.JWT_SECRET,

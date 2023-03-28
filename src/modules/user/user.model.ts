@@ -1,5 +1,6 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
+import { Languages } from "../language/language.structure";
 
 export type UserDocument = HydratedDocument<UserModel>;
 
@@ -20,6 +21,9 @@ export class UserModel {
 
     @Prop({ default: 250000 })
     balance: number;
+
+    @Prop({ enum: Object.keys(Languages), default: Languages.FA })
+    language: string;
 
 }
 
