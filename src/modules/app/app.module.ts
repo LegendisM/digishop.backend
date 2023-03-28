@@ -3,6 +3,7 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ThrottlerModule } from "@nestjs/throttler";
 import { UserModule } from "../user/user.module";
+import { AuthModule } from "../auth/auth.module";
 
 @Module({
     imports: [
@@ -14,7 +15,8 @@ import { UserModule } from "../user/user.module";
         MongooseModule.forRoot(process.env.DB_URI, {
             dbName: process.env.DB_NAME
         }),
-        UserModule
+        UserModule,
+        AuthModule
     ],
 })
 export class AppModule { }

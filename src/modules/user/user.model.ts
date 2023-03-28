@@ -18,6 +18,9 @@ export class UserModel {
     @Prop({ default: "" })
     avatar: string;
 
+    @Prop({ default: 250000 })
+    balance: number;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserModel);
