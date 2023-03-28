@@ -22,8 +22,8 @@ export class UserService {
         return await this.userModel.findById(id, projection);
     }
 
-    async find(filter: object | UserModel, projection: UserModel | object = {}): Promise<UserDocument[]> {
-        return await this.userModel.find(filter, projection);
+    async find(filter: object | UserModel, projection: UserModel | object = {}, option: object = {}): Promise<UserDocument[]> {
+        return await this.userModel.find(filter, projection, option);
     }
 
     async updateMany(filter: object | UserModel, update: object | UserModel): Promise<any> {
