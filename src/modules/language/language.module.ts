@@ -1,5 +1,5 @@
 import { Module, DynamicModule } from "@nestjs/common";
-import { ILanguageStorage } from "./language.structure";
+import { ILanguageStorage } from "./interface/language.interface";
 import { LanguageService } from "./language.service";
 
 @Module({})

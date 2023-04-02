@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsString, MaxLength, Min, MinLength } from "class-validator";
+import { IsNotEmpty, IsString, MaxLength, MinLength, IsNumberString, IsEnum } from "class-validator";
+import { ProductCategories } from "../interface/product.interface";
 
 
 export class CreateProductDto {
@@ -9,6 +10,9 @@ export class CreateProductDto {
     @MaxLength(50)
     name: string;
 
+    @IsEnum(ProductCategories)
+    category: string;
+
     @IsString()
     @IsNotEmpty()
     @MinLength(1)
@@ -18,12 +22,10 @@ export class CreateProductDto {
     @IsString()
     image: string;
 
-    @IsNumber()
-    @Min(1)
+    @IsNumberString()
     price: number;
-    
-    @IsNumber()
-    @Min(1)
+
+    @IsNumberString()
     stock: number;
 
 }

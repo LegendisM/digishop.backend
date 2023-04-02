@@ -1,7 +1,12 @@
-import { Body, Controller, Get } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import { ProductService } from "./product.service";
-import { Auth } from "../auth/auth.decorator";
+import { Auth } from "../auth/decorator/auth.decorator";
 import { FindProducts, FindProductsResult } from "./dto/find-product.dto";
+import { CreateProductDto } from "./dto/create-product.dto";
+import { Roles } from "../user/decorator/role.decorator";
+import { Role } from "../user/interface/role.interface";
+import { DeleteProductDto } from "./dto/delete-product.dto";
+import { ProductModel } from "./product.model";
 
 @Controller({
     path: 'product',
@@ -13,7 +18,7 @@ export class ProductController {
         private productService: ProductService
     ) { }
 
-    @Get('find')
+    @Get()
     async find(@Body() dto: FindProducts): Promise<FindProductsResult> {
         let products = await this.productService.find({ category: dto.category }, {}, { skip: (dto.page - 1) * dto.limit, limit: dto.limit * 1 });
         let productCount = await this.productService.count();
@@ -23,4 +28,24 @@ export class ProductController {
             products
         };
     }
+
+    @Post()
+    @Roles(Role.ADMIN)
+    @HttpCode(HttpStatus.CREATED)
+    async create(@Body() dto: CreateProductDto): Promise<ProductModel> {
+        return await this.productService.create(dto);
+    }
+
+    @Delete()
+    @Roles(Role.ADMIN)
+    async delete(@Body() dto: DeleteProductDto): Promise<{ status: boolean }> {
+        let status = false;
+        let product = await this.productService.findById(dto.id);
+        if (product) {
+            await product.deleteOne();
+            status = true;
+        }
+        return { status };
+    }
+
 }

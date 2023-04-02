@@ -33,4 +33,17 @@ export class ProductService {
     async count(filter: ProductModel | object = {}): Promise<number> {
         return await this.productModel.count(filter);
     }
+
+    async findOneAndRemove(filter: object | ProductModel, option: object = {}): Promise<any> {
+        await this.productModel.findOneAndRemove(filter, option);
+    }
+
+    async deleteOne(filter: object | ProductModel, option: object = {}): Promise<any> {
+        await this.productModel.deleteOne(filter, option);
+    }
+
+    async deleteMany(filter: object | ProductModel, option: object = {}): Promise<any> {
+        await this.productModel.deleteMany(filter, option);
+    }
+
 }

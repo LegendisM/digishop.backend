@@ -1,4 +1,4 @@
-import { ILanguageStorage, Languages } from "../language/language.structure";
+import { ILanguageStorage, Languages } from "../language/interface/language.interface";
 
 
 export const AuthLanguageStorage: ILanguageStorage[] = [

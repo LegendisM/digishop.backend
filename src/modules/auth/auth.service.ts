@@ -23,7 +23,7 @@ export class AuthService {
                 username: dto.username,
                 password: bcrypt.hashSync(dto.password, 6)
             });
-            token = this.jwtService.sign({ id: user.id, username: user.username, language: user.language });
+            token = this.jwtService.sign({ id: user.id, username: user.username });
             message = 'signup_success';
             status = true;
         } else {
@@ -38,7 +38,7 @@ export class AuthService {
         let user = await this.userService.findOne({ username: dto.username });
 
         if (user && bcrypt.compareSync(dto.password, user.password)) {
-            token = this.jwtService.sign({ id: user.id, username: user.username, language: user.language });
+            token = this.jwtService.sign({ id: user.id, username: user.username });
             message = 'signin_success';
             status = true;
         } else {

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ILanguageStorage, Languages } from "./language.structure";
+import { ILanguageStorage, Languages } from "./interface/language.interface";
 import { REQUEST } from "@nestjs/core";
 
 @Injectable()

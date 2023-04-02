@@ -1,5 +1,5 @@
 import { IsEnum, IsNumberString } from "class-validator";
-import { ProductCategories } from "../product.structure";
+import { ProductCategories } from "../interface/product.interface";
 import { ProductModel } from "../product.model";
 
 export class FindProducts {
