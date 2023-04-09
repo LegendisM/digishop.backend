@@ -26,7 +26,7 @@ export class UserModel {
     @Prop({ default: [Role.USER] })
     roles: Role[];
 
-    @Prop({ enum: Object.keys(Languages), default: Languages.FA })
+    @Prop({ enum: Object.keys(Languages), default: Languages.EN })
     language: string;
 
 }

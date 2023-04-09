@@ -9,7 +9,7 @@ export class LanguageService {
         @Inject("LANGUAGE_STORAGE") private storage: ILanguageStorage[],
     ) { }
 
-    get(key: string, language: Languages = Languages.FA): string {
+    get(key: string, language: Languages = Languages.EN): string {
         if (this.request?.user?.language) {
             language = this.request.user.language;
         }
