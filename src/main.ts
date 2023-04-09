@@ -21,6 +21,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // * config
+  app.enableCors();
   app.setGlobalPrefix("/api");
   app.enableVersioning({ type: VersioningType.URI })
   app.useGlobalPipes(new ValidationPipe());
