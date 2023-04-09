@@ -9,6 +9,6 @@ export class UserController {
 
     @Get()
     async index() {
-        return { status: 'Module Ready' };
+        return { state: 'Module Ready' };
     }
 }

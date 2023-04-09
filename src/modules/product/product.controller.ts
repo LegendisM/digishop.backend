@@ -38,14 +38,14 @@ export class ProductController {
 
     @Delete()
     @Roles(Role.ADMIN)
-    async delete(@Body() dto: DeleteProductDto): Promise<{ status: boolean }> {
-        let status = false;
+    async delete(@Body() dto: DeleteProductDto): Promise<{ state: boolean }> {
+        let state = false;
         let product = await this.productService.findById(dto.id);
         if (product) {
             await product.deleteOne();
-            status = true;
+            state = true;
         }
-        return { status };
+        return { state };
     }
 
 }

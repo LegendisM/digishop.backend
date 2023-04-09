@@ -15,21 +15,21 @@ export class AuthController {
     @Post('signup')
     @HttpCode(HttpStatus.CREATED)
     async signup(@Body() dto: SignUpDto) {
-        let { status, token, message } = await this.authService.signup(dto);
-        if (!status) {
+        let { state, token, message } = await this.authService.signup(dto);
+        if (!state) {
             return new ConflictException({ message });
         }
-        return { status, token, message };
+        return { state, token, message };
     }
 
     @Post('signin')
     @HttpCode(HttpStatus.ACCEPTED)
     async signin(@Body() dto: SignInDto) {
-        let { status, token, message } = await this.authService.signin(dto);
-        if (!status) {
+        let { state, token, message } = await this.authService.signin(dto);
+        if (!state) {
             return new UnauthorizedException({ message });
         }
-        return { status, token, message };
+        return { state, token, message };
     }
 
 }

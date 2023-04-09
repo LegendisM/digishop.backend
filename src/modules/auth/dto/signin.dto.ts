@@ -20,7 +20,7 @@ export class SignInDto {
 export class SignInResultDto {
 
     @IsBoolean()
-    status: boolean;
+    state: boolean;
 
     user: UserModel | null;
 
