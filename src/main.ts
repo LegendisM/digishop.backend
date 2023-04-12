@@ -10,9 +10,10 @@ dotenv.config({ path: path.join(__dirname, '..', `.env.${process.env.NODE_ENV}.l
  */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules/app/app.module';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import helmet from 'helmet';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { NestExpressApplication } from "@nestjs/platform-express";
+import * as compession from "compression";
+import helmet from "helmet";
 
 /**
  * @description application startup
@@ -27,6 +28,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   // * middlewares
+  app.use(compession());
   app.use(helmet());
 
   // * static assets
