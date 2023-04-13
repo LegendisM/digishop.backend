@@ -13,7 +13,7 @@ export class AuthController {
     ) { }
 
     @Post('signup')
-    @HttpCode(HttpStatus.CREATED)
+    @HttpCode(HttpStatus.OK)
     async signup(@Body() dto: SignUpDto) {
         let { state, token, message } = await this.authService.signup(dto);
         if (!state) {
@@ -23,7 +23,7 @@ export class AuthController {
     }
 
     @Post('signin')
-    @HttpCode(HttpStatus.ACCEPTED)
+    @HttpCode(HttpStatus.OK)
     async signin(@Body() dto: SignInDto) {
         let { state, token, message } = await this.authService.signin(dto);
         if (!state) {
