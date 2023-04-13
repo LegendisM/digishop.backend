@@ -6,13 +6,13 @@ export class SignInDto {
     @IsString()
     @IsNotEmpty()
     @MinLength(3)
-    @MaxLength(40)
+    @MaxLength(25)
     username: string;
 
     @IsString()
     @IsNotEmpty()
     @MinLength(3)
-    @MaxLength(40)
+    @MaxLength(25)
     password: string;
 
 }
