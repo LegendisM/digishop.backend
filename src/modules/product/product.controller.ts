@@ -6,6 +6,7 @@ import { Roles } from "../user/decorator/role.decorator";
 import { Role } from "../user/interface/role.interface";
 import { DeleteProductDto } from "./dto/delete-product.dto";
 import { ProductModel } from "./product.model";
+import { SearchProduct, SearchProductResult } from "./dto/search-product.dto";
 
 @Controller({
     path: 'product',
@@ -18,7 +19,30 @@ export class ProductController {
 
     @Get()
     async find(@Query() dto: FindProducts): Promise<FindProductsResult> {
-        let products = await this.productService.find({ category: dto.category }, {}, { skip: (dto.page - 1) * dto.limit, limit: dto.limit * 1 });
+        let products = await this.productService.find({
+            category: dto.category
+        }, {}, {
+            skip: (dto.page - 1) * dto.limit,
+            limit: dto.limit * 1
+        });
+        let productCount = await this.productService.count();
+        return {
+            current_page: dto.page,
+            total_pages: Math.ceil(productCount / dto.limit),
+            products
+        };
+    }
+
+    @Get('search')
+    async search(@Query() dto: SearchProduct): Promise<SearchProductResult> {
+        let products = await this.productService.find({
+            category: dto.category,
+            name: { $regex: `${dto.name}` },
+            description: { $regex: `${dto.description}` }
+        }, {}, {
+            skip: (dto.page - 1) * dto.limit,
+            limit: dto.limit * 1
+        });
         let productCount = await this.productService.count();
         return {
             current_page: dto.page,
