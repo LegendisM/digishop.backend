@@ -5,7 +5,7 @@ import { AuthController } from "./auth.controller";
 import { JwtModule } from "@nestjs/jwt";
 import { LanguageModule } from "../language/language.module";
 import { AuthLanguageStorage } from "./auth.language";
-import { JwtStrategy } from "./jwt.strategy";
+import { JwtStrategy } from "./strategy/jwt.strategy";
 
 @Module({
     imports: [
