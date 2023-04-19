@@ -4,7 +4,7 @@ import { Auth } from "../auth/decorator/auth.decorator";
 import { FetchProfileResultDto } from "./dto/fetch-profile.dto";
 import { User } from "../user/decorator/user.decorator";
 import { GetUserDto } from "../user/dto/get-user.dto";
-import { UpdateProfileDto } from "./dto/update-profile.dto";
+import { UpdateProfileDto, UpdateProfileResultDto } from "./dto/update-profile.dto";
 
 @Controller({
     path: 'profile',
@@ -20,7 +20,7 @@ export class ProfileController {
     }
 
     @Put()
-    async update(@Body() dto: UpdateProfileDto, @User() user: GetUserDto) {
+    async update(@Body() dto: UpdateProfileDto, @User() user: GetUserDto): Promise<UpdateProfileResultDto> {
         return await this.profileService.update(dto, user);
     }
 
