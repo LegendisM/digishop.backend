@@ -14,14 +14,14 @@ export class UserModel {
     @Prop({ default: "" })
     email: string;
 
+    @Prop({ default: "" })
+    nationalcode: string;
+
     @Prop({ required: true })
     password: string;
 
     @Prop({ default: "" })
     avatar: string;
-
-    @Prop({ default: 250000 })
-    balance: number;
 
     @Prop({ default: [Role.USER] })
     roles: Role[];

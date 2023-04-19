@@ -6,6 +6,7 @@ import { UserModule } from "../user/user.module";
 import { AuthModule } from "../auth/auth.module";
 import { ProductModule } from "../product/product.module";
 import { SupportModule } from "../support/support.module";
+import { ProfileModule } from "../profile/profile.module";
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { SupportModule } from "../support/support.module";
         }),
         UserModule,
         AuthModule,
+        ProfileModule,
         ProductModule,
         SupportModule
     ],

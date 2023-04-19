@@ -32,7 +32,7 @@ async function bootstrap() {
   app.use(helmet());
 
   // * static assets
-  app.useStaticAssets(path.join(__dirname, '..', 'public'));
+  app.useStaticAssets(path.join(__dirname, '..', 'public'), { index: false, prefix: '/public' });
 
   await app.listen(process.env.MAIN_PORT);
 }

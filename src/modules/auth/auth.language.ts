@@ -1,6 +1,5 @@
 import { ILanguageStorage, Languages } from "../language/interface/language.interface";
 
-
 export const AuthLanguageStorage: ILanguageStorage[] = [
     {
         key: "signup_success", values: [

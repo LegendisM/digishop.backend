@@ -26,6 +26,10 @@ export class UserService {
         return await this.userModel.find(filter, projection, option);
     }
 
+    async updateOne(filter: object | UserModel, update: object | UserModel): Promise<any> {
+        return await this.userModel.updateOne(filter, update);
+    }
+
     async updateMany(filter: object | UserModel, update: object | UserModel): Promise<any> {
         return await this.userModel.updateMany(filter, update);
     }
