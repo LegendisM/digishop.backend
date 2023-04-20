@@ -1,3 +1,4 @@
+import fs from "fs";
 import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { FetchProfileResultDto } from "./dto/fetch-profile.dto";
@@ -25,17 +26,25 @@ export class ProfileService {
         return { state, username, email, nationalcode, avatar };
     }
 
-    async update(dto: UpdateProfileDto, user: GetUserDto): Promise<UpdateProfileResultDto> {
+    async update(dto: UpdateProfileDto, { id }: GetUserDto): Promise<UpdateProfileResultDto> {
         let message = '', state = false;
+        let user = await this.userService.findById(id);
         let existUser = await this.userService.findOne({
             $and: [
                 { $or: [{ username: dto.username }, { email: dto.email }, { nationalcode: dto.nationalcode }] },
-                { _id: { $ne: user.id } }
+                { _id: { $ne: id } }
             ]
         });
 
         if (!existUser) {
-            await this.userService.updateOne({ _id: user.id }, dto);
+            await user.updateOne(dto);
+            // * unlink oldest avatar from storage
+            if (dto.avatar) {
+                let oldAvatarPath = `./public/uploads/avatars/${user.avatar}`;
+                if (fs.existsSync(oldAvatarPath)) {
+                    fs.unlinkSync(oldAvatarPath);
+                }
+            }
             state = true;
             message = 'update_success';
         } else {

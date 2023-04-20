@@ -18,6 +18,8 @@ export class UpdateProfileDto {
     @Length(10, 10)
     nationalcode: string;
 
+    avatar?: string;
+
 }
 
 export class UpdateProfileResultDto {

@@ -29,7 +29,7 @@ async function bootstrap() {
 
   // * middlewares
   app.use(compression());
-  app.use(helmet());
+  app.use(helmet({ crossOriginResourcePolicy: false }));
 
   // * static assets
   app.useStaticAssets(path.join(__dirname, '..', 'public'), { index: false, prefix: '/public' });
