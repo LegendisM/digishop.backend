@@ -1,6 +1,11 @@
-export enum ProductCategories {
-    GENERAL = "GENERAL",
-    SPECIAL = "SPECIAL",
-    POPULAR = "POPULAR",
-    MODERN = "MODERN"
+import { Document } from "mongoose";
+
+export interface IProduct extends Document {
+    name: string;
+    category: string[];
+    description: string;
+    price: number;
+    stock: number;
+    cover: string;
+    images: string[];
 }

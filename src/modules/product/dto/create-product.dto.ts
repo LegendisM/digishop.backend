@@ -1,31 +1,25 @@
-import { IsNotEmpty, IsString, MaxLength, MinLength, IsNumberString, IsEnum } from "class-validator";
-import { ProductCategories } from "../interface/product.interface";
-
+import { IsString, MaxLength, IsNumber, IsArray } from "class-validator";
 
 export class CreateProductDto {
 
     @IsString()
-    @IsNotEmpty()
-    @MinLength(1)
     @MaxLength(50)
     name: string;
 
-    @IsEnum(ProductCategories)
-    category: string;
+    @IsArray()
+    @IsString({ each: true })
+    category: string[];
 
     @IsString()
-    @IsNotEmpty()
-    @MinLength(1)
     @MaxLength(250)
     description: string;
 
-    @IsString()
-    image: string;
-
-    @IsNumberString()
+    @IsNumber()
     price: number;
 
-    @IsNumberString()
+    @IsNumber()
     stock: number;
+
+    cover?: string;
 
 }
