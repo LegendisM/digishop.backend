@@ -1,10 +1,4 @@
-import { IsMongoId, IsString } from "class-validator";
+import { PartialType } from "@nestjs/swagger";
+import { IdentifierDto } from "src/common/dto/identifier.dto";
 
-
-export class DeleteProductDto {
-
-    @IsString()
-    @IsMongoId()
-    id: string;
-
-}
+export class DeleteProductDto extends PartialType(IdentifierDto) { }

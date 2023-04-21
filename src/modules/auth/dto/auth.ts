@@ -1,15 +1,21 @@
 import { PickType } from "@nestjs/swagger";
 import { IsBoolean, IsString } from "class-validator";
 import { BaseUserDto } from "src/modules/user/dto/base-user.dto";
+import { IUser } from "src/modules/user/interface/user.interface";
 
-export class UpdateProfileDto extends PickType(
+export class AuthDto extends PickType(
     BaseUserDto,
-    ['username', 'email', 'nationalcode', 'avatar']
+    ['username', 'password']
 ) { }
 
-export class UpdateProfileResultDto {
+export class AuthResultDto {
     @IsBoolean()
     state: boolean;
+
+    user: IUser | null;
+
+    @IsString()
+    token: string;
 
     @IsString()
     message: string;

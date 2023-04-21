@@ -13,9 +13,10 @@ export class ProfileService {
         private languageService: LanguageService
     ) { }
 
-    async fetch(dto: GetUserDto): Promise<FetchProfileResultDto> {
+    async fetch(userDto: GetUserDto): Promise<FetchProfileResultDto> {
+        let { id } = userDto;
         let username = '', email = '', nationalcode = '', avatar = '', state = false;
-        let user = await this.userService.findOne({ _id: dto.id });
+        let user = await this.userService.findOne({ _id: id });
         if (user) {
             username = user.username;
             email = user.email;
@@ -26,20 +27,21 @@ export class ProfileService {
         return { state, username, email, nationalcode, avatar };
     }
 
-    async update(dto: UpdateProfileDto, { id }: GetUserDto): Promise<UpdateProfileResultDto> {
+    async update(updateDto: UpdateProfileDto, userDto: GetUserDto): Promise<UpdateProfileResultDto> {
+        let { id } = userDto;
         let message = '', state = false;
         let user = await this.userService.findById(id);
         let existUser = await this.userService.findOne({
             $and: [
-                { $or: [{ username: dto.username }, { email: dto.email }, { nationalcode: dto.nationalcode }] },
+                { $or: [{ username: updateDto.username }, { email: updateDto.email }, { nationalcode: updateDto.nationalcode }] },
                 { _id: { $ne: id } }
             ]
         });
 
         if (!existUser) {
-            await user.updateOne(dto);
+            await user.updateOne(updateDto);
             // * unlink oldest avatar from storage
-            if (dto.avatar) {
+            if (updateDto.avatar) {
                 let oldAvatarPath = `./public/uploads/avatars/${user.avatar}`;
                 if (fs.existsSync(oldAvatarPath)) {
                     fs.unlinkSync(oldAvatarPath);
@@ -53,5 +55,4 @@ export class ProfileService {
 
         return { state, message: this.languageService.get(message) };
     }
-
 }

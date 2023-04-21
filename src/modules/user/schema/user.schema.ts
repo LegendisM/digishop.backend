@@ -1,13 +1,10 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
-import { Languages } from "../language/interface/language.interface";
-import { Role } from "./interface/role.interface";
+import { Languages } from "../../language/interface/language.interface";
+import { Role } from "../interface/role.interface";
+import { Document } from "mongoose";
 
-export type UserDocument = HydratedDocument<UserModel>;
-
-@Schema({ collection: "users", timestamps: true })
-export class UserModel {
-
+@Schema({ timestamps: true })
+export class User extends Document {
     @Prop({ required: true })
     username: string;
 
@@ -28,7 +25,6 @@ export class UserModel {
 
     @Prop({ enum: Object.keys(Languages), default: Languages.EN })
     language: string;
-
 }
 
-export const UserSchema = SchemaFactory.createForClass(UserModel);
+export const UserSchema = SchemaFactory.createForClass(User);

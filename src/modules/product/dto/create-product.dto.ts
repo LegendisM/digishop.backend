@@ -1,25 +1,4 @@
-import { IsString, MaxLength, IsNumber, IsArray } from "class-validator";
+import { PartialType } from "@nestjs/swagger";
+import { BaseProductDto } from "./base-product.dto";
 
-export class CreateProductDto {
-
-    @IsString()
-    @MaxLength(50)
-    name: string;
-
-    @IsArray()
-    @IsString({ each: true })
-    category: string[];
-
-    @IsString()
-    @MaxLength(250)
-    description: string;
-
-    @IsNumber()
-    price: number;
-
-    @IsNumber()
-    stock: number;
-
-    cover?: string;
-
-}
+export class CreateProductDto extends PartialType(BaseProductDto) { }

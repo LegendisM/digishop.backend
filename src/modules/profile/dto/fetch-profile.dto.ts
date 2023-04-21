@@ -1,20 +1,11 @@
-import { IsBoolean, IsString } from "class-validator";
+import { PickType } from "@nestjs/swagger";
+import { IsBoolean } from "class-validator";
+import { BaseUserDto } from "src/modules/user/dto/base-user.dto";
 
-export class FetchProfileResultDto {
-
+export class FetchProfileResultDto extends PickType(
+    BaseUserDto,
+    ['username', 'email', 'nationalcode', 'avatar']
+) {
     @IsBoolean()
     state: boolean;
-
-    @IsString()
-    username: string;
-
-    @IsString()
-    email: string;
-
-    @IsString()
-    nationalcode: string;
-
-    @IsString()
-    avatar: string;
-
 }

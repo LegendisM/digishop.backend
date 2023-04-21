@@ -1,12 +1,7 @@
-import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
+import { OmitType } from "@nestjs/swagger";
+import { BaseSupportDto } from "./base-support.dto";
 
-export class CreateSupportDto {
-
-    @IsString()
-    @IsNotEmpty()
-    subject: string;
-
-    @IsString()
-    content: string;
-
-}
+export class CreateSupportDto extends OmitType(
+    BaseSupportDto,
+    ['owner']
+) { }

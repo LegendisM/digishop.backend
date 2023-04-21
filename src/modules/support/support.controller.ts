@@ -16,9 +16,8 @@ export class SupportController {
     ) { }
 
     @Post()
-    async create(@Body() dto: CreateSupportDto, @User() user: GetUserDto) {
-        let support = await this.supportService.create(dto, user);
+    async create(@Body() createDto: CreateSupportDto, @User() userDto: GetUserDto) {
+        let support = await this.supportService.create(createDto, userDto);
         return { state: !!support }
     }
-
 }

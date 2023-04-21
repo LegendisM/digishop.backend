@@ -17,15 +17,15 @@ export class ProfileController {
     constructor(private profileService: ProfileService) { }
 
     @Get()
-    async fetch(@User() dto: GetUserDto): Promise<FetchProfileResultDto> {
-        return await this.profileService.fetch(dto);
+    async fetch(@User() userDto: GetUserDto): Promise<FetchProfileResultDto> {
+        return await this.profileService.fetch(userDto);
     }
 
     @Put()
     @UseInterceptors(FileInterceptor('avatar'))
     async update(
-        @Body() dto: UpdateProfileDto,
-        @User() user: GetUserDto,
+        @Body() updateDto: UpdateProfileDto,
+        @User() userDto: GetUserDto,
         @UploadedFile(
             new ParseFilePipe({
                 fileIsRequired: false,
@@ -39,9 +39,8 @@ export class ProfileController {
         avatar: Express.Multer.File
     ): Promise<UpdateProfileResultDto> {
         if (avatar) {
-            dto.avatar = avatar.filename;
+            updateDto.avatar = avatar.filename;
         }
-        return await this.profileService.update(dto, user);
+        return await this.profileService.update(updateDto, userDto);
     }
-
 }

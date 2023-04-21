@@ -1,10 +1,10 @@
 import { IntersectionType, PickType } from "@nestjs/swagger";
 import { IProduct } from "../interface/product.interface";
-import { CreateProductDto } from "./create-product.dto";
 import { PaginationDto } from "src/common/dto/pagination.dto";
+import { BaseProductDto } from "./base-product.dto";
 
 export class FindProducts extends IntersectionType(
-    PickType(CreateProductDto, ['name', 'category', 'description'] as const),
+    PickType(BaseProductDto, ['name', 'category', 'description'] as const),
     PaginationDto
 ) { }
 

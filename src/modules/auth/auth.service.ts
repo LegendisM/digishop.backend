@@ -1,10 +1,9 @@
+import bcrypt from "bcrypt";
 import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
-import { SignUpDto, SignUpResultDto } from "./dto/signup.dto";
-import { SignInDto, SignInResultDto } from "./dto/signin.dto";
-import bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
 import { LanguageService } from "../language/language.service";
+import { AuthDto, AuthResultDto } from "./dto/auth";
 
 @Injectable()
 export class AuthService {
@@ -14,14 +13,14 @@ export class AuthService {
         private languageService: LanguageService
     ) { }
 
-    async signup(dto: SignUpDto): Promise<SignUpResultDto> {
+    async signup(authDto: AuthDto): Promise<AuthResultDto> {
         let token = '', message = '', state = false;
-        let user = await this.userService.findOne({ username: dto.username });
+        let user = await this.userService.findOne({ username: authDto.username });
 
         if (!user) {
             user = await this.userService.create({
-                username: dto.username,
-                password: bcrypt.hashSync(dto.password, 6)
+                username: authDto.username,
+                password: bcrypt.hashSync(authDto.password, 6)
             });
             token = this.jwtService.sign({ id: user.id, username: user.username });
             message = 'signup_success';
@@ -33,11 +32,11 @@ export class AuthService {
         return { state, user, token, message: this.languageService.get(message) };
     }
 
-    async signin(dto: SignInDto): Promise<SignInResultDto> {
+    async signin(authDto: AuthDto): Promise<AuthResultDto> {
         let token = '', message = '', state = false;
-        let user = await this.userService.findOne({ username: dto.username });
+        let user = await this.userService.findOne({ username: authDto.username });
 
-        if (user && bcrypt.compareSync(dto.password, user.password)) {
+        if (user && bcrypt.compareSync(authDto.password, user.password)) {
             token = this.jwtService.sign({ id: user.id, username: user.username });
             message = 'signin_success';
             state = true;
@@ -47,5 +46,4 @@ export class AuthService {
 
         return { state, user, token, message: this.languageService.get(message) };
     }
-
 }

@@ -3,7 +3,6 @@ import { Document } from "mongoose";
 
 @Schema({ timestamps: true })
 export class Product extends Document {
-
     @Prop({ required: true })
     name: string;
 
@@ -24,7 +23,6 @@ export class Product extends Document {
 
     @Prop({ type: [String], default: [] })
     images: string[];
-
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

@@ -42,5 +42,4 @@ export class ProductController {
         let state = await this.productService.remove(deleteDto);
         return { state: !!state };
     }
-
 }

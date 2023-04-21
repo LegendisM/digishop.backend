@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { Product } from "./schema/product.schema";
@@ -21,12 +21,13 @@ export class ProductService {
     async findAll(findAllDto: FindProducts): Promise<FindProductsResult> {
         let { page, limit } = findAllDto;
         let productCount = await this.productModel.count();
+        let filter = ['category', 'name', 'description'].filter((key) => {
+            return findAllDto[key].length > 0;
+        }).map((key) => {
+            return ({ [key]: { [(key == 'category' ? "$in" : "$regex")]: findAllDto[key] } });
+        });
         let products = await this.productModel.find({
-            $or: [
-                { category: { $in: findAllDto.category } },
-                { name: { $regex: findAllDto.name } },
-                { description: { $regex: findAllDto.description } },
-            ]
+            $or: filter.length > 0 ? filter : [{}],
         }).skip((page - 1) * limit).limit(limit - 1);
         return {
             current_page: page,
@@ -44,5 +45,4 @@ export class ProductService {
         let { id } = deleteDto;
         return await this.productModel.findByIdAndRemove(id);
     }
-
 }
