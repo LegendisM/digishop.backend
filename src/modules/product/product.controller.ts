@@ -17,7 +17,8 @@ export class ProductController {
         private productService: ProductService
     ) { }
 
-    @Get()
+    @Post()
+    @HttpCode(HttpStatus.OK)
     async findAll(@Body() findAllDto: FindProducts): Promise<FindProductsResult> {
         return await this.productService.findAll(findAllDto);
     }
