@@ -28,7 +28,7 @@ export class ProductService {
         });
         let products = await this.productModel.find({
             $or: filter.length > 0 ? filter : [{}],
-        }).skip((page - 1) * limit).limit(limit - 1);
+        }).skip((page - 1) * limit).limit(limit - 1).sort({ updatedAt: -1 });
         return {
             current_page: page,
             total_pages: Math.ceil(productCount / limit),
