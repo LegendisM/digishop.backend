@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Query, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, HttpStatus, Post, Put, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { Roles } from "../user/decorator/role.decorator";
@@ -9,6 +9,8 @@ import { DeleteProductDto } from "./dto/delete-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { User } from "../user/decorator/user.decorator";
 import { GetUserDto } from "../user/dto/get-user.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { CompressedFile } from "src/common/decorator/compress.decorator";
 
 @Controller({
     path: 'product',
@@ -27,8 +29,24 @@ export class ProductController {
 
     @Post()
     @Roles(Role.ADMIN, Role.MODERATOR)
+    @UseInterceptors(FileInterceptor('cover'))
     @HttpCode(HttpStatus.CREATED)
-    async create(@Body() createDto: CreateProductDto, @User() userDto: GetUserDto): Promise<IProduct> {
+    async create(
+        @Body() createDto: CreateProductDto,
+        @User() userDto: GetUserDto,
+        @UploadedFile(
+            new ParseFilePipe({
+                fileIsRequired: true,
+                validators: [
+                    new MaxFileSizeValidator({ maxSize: 1024 * 1000 * 8 }),
+                    new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
+                ],
+            }),
+        )
+        @CompressedFile({ width: 800, quality: 80 })
+        cover: Express.Multer.File
+    ): Promise<IProduct> {
+        createDto.cover = cover.filename;
         return await this.productService.create(createDto, userDto);
     }
 

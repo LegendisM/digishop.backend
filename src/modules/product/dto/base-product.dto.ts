@@ -1,4 +1,4 @@
-import { IsString, MaxLength, IsNumber, IsArray, IsMongoId } from "class-validator";
+import { IsString, MaxLength, IsArray, IsMongoId, IsNumberString } from "class-validator";
 import { Types } from "mongoose";
 
 export class BaseProductDto {
@@ -17,10 +17,10 @@ export class BaseProductDto {
     @MaxLength(250)
     description: string;
 
-    @IsNumber()
+    @IsNumberString()
     price: number;
 
-    @IsNumber()
+    @IsNumberString()
     stock: number;
 
     cover?: string;

@@ -25,7 +25,7 @@ async function bootstrap() {
   app.enableCors();
   app.setGlobalPrefix("/api");
   app.enableVersioning({ type: VersioningType.URI })
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   // * middlewares
   app.use(compression());

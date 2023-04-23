@@ -1,3 +1,4 @@
+import fs from "fs";
 import mongoose, { Model } from "mongoose";
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
@@ -55,6 +56,15 @@ export class ProductService {
         let product = await this.findById(deleteDto.id);
         if (!userDto._id.equals(product.owner._id) && !userDto.roles.includes(Role.ADMIN)) {
             throw new ForbiddenException();
+        }
+        // * unlink cover from storage
+        if (product.cover) {
+            try {
+                let coverPath = `./public/uploads/products/${product.cover}`;
+                if (fs.existsSync(coverPath)) {
+                    fs.unlinkSync(coverPath);
+                }
+            } catch (error) { }
         }
         return await product.deleteOne();
     }
