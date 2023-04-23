@@ -45,7 +45,7 @@ export class ProductService {
 
     async update(updateDto: UpdateProductDto, userDto: GetUserDto): Promise<IProduct> {
         let product = await this.findById(updateDto.id);
-        if (!userDto._id.equals(product.owner._id)) {
+        if (!userDto._id.equals(product.owner._id) && !userDto.roles.includes(Role.ADMIN)) {
             throw new ForbiddenException();
         }
         return product.updateOne(updateDto);

@@ -42,10 +42,12 @@ export class ProfileService {
             await user.updateOne(updateDto);
             // * unlink oldest avatar from storage
             if (updateDto.avatar) {
-                let oldAvatarPath = `./public/uploads/avatars/${user.avatar}`;
-                if (fs.existsSync(oldAvatarPath)) {
-                    fs.unlinkSync(oldAvatarPath);
-                }
+                try {
+                    let oldAvatarPath = `./public/uploads/avatars/${user.avatar}`;
+                    if (fs.existsSync(oldAvatarPath)) {
+                        fs.unlinkSync(oldAvatarPath);
+                    }
+                } catch (error) { }
             }
             state = true;
             message = 'update_success';
