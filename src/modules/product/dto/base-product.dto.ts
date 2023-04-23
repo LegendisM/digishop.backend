@@ -1,6 +1,10 @@
-import { IsString, MaxLength, IsNumber, IsArray } from "class-validator";
+import { IsString, MaxLength, IsNumber, IsArray, IsMongoId } from "class-validator";
+import { Types } from "mongoose";
 
 export class BaseProductDto {
+    @IsMongoId()
+    owner: Types.ObjectId;
+
     @IsString()
     @MaxLength(50)
     name: string;

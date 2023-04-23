@@ -1,9 +1,9 @@
-import { Schema } from "mongoose";
+import { Types } from "mongoose";
 import { IsMongoId, IsNotEmpty, IsString } from "class-validator";
 
 export class BaseSupportDto {
     @IsMongoId()
-    owner: Schema.Types.ObjectId;
+    owner: Types.ObjectId;
 
     @IsString()
     @IsNotEmpty()

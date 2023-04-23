@@ -1,10 +1,10 @@
-import { Document, Schema } from "mongoose";
+import { Document, Types } from "mongoose";
 import { IUser } from "src/modules/user/interface/user.interface";
 
 export interface ISupport extends Document {
-    owner: Schema.Types.ObjectId | IUser;
+    owner: Types.ObjectId | IUser;
     status: SupportStatus;
-    messages: { owner: Schema.Types.ObjectId | IUser, subject: string, content: string }[];
+    messages: { owner: Types.ObjectId | IUser, subject: string, content: string }[];
 }
 
 export enum SupportStatus {
