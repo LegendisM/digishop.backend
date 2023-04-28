@@ -1,6 +1,6 @@
 import { Controller, Body, Post, UnauthorizedException, ConflictException, HttpCode, HttpStatus } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { AuthDto } from "./dto/auth";
+import { AuthDto } from "./dto/auth.dto";
 
 @Controller({
     path: 'auth',
@@ -16,7 +16,7 @@ export class AuthController {
     async signup(@Body() authDto: AuthDto) {
         let { state, token, message } = await this.authService.signup(authDto);
         if (!state) {
-            return new ConflictException({ message });
+            throw new ConflictException({ message });
         }
         return { state, token, message };
     }
@@ -26,7 +26,7 @@ export class AuthController {
     async signin(@Body() authDto: AuthDto) {
         let { state, token, message } = await this.authService.signin(authDto);
         if (!state) {
-            return new UnauthorizedException({ message });
+            throw new UnauthorizedException({ message });
         }
         return { state, token, message };
     }
