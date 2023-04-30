@@ -16,7 +16,7 @@ export class AuthController {
     async signup(@Body() authDto: AuthDto) {
         let { state, token, message } = await this.authService.signup(authDto);
         if (!state) {
-            throw new ConflictException({ message });
+            throw new ConflictException(message);
         }
         return { state, token, message };
     }
@@ -26,7 +26,7 @@ export class AuthController {
     async signin(@Body() authDto: AuthDto) {
         let { state, token, message } = await this.authService.signin(authDto);
         if (!state) {
-            throw new UnauthorizedException({ message });
+            throw new UnauthorizedException(message);
         }
         return { state, token, message };
     }
