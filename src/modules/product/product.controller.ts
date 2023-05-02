@@ -4,7 +4,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { Roles } from "../user/decorator/role.decorator";
 import { Role } from "../user/interface/role.interface";
 import { IProduct } from "./interface/product.interface";
-import { FindProducts, FindProductsResult } from "./dto/find-product.dto";
+import { FindAllProducts, FindAllProductsResultDto } from "./dto/find-product.dto";
 import { DeleteProductDto } from "./dto/delete-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { User } from "../user/decorator/user.decorator";
@@ -23,7 +23,7 @@ export class ProductController {
 
     @Post('find')
     @HttpCode(HttpStatus.OK)
-    async findAll(@Body() findAllDto: FindProducts): Promise<FindProductsResult> {
+    async findAll(@Body() findAllDto: FindAllProducts): Promise<FindAllProductsResultDto> {
         return await this.productService.findAll(findAllDto);
     }
 
