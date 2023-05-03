@@ -4,7 +4,7 @@ import { ProfileService } from "./profile.service";
 import { Auth } from "../auth/decorator/auth.decorator";
 import { User } from "../user/decorator/user.decorator";
 import { GetUserDto } from "../user/dto/get-user.dto";
-import { FetchProfileResultDto } from "./dto/fetch-profile.dto";
+import { GetProfileResultDto } from "./dto/get-profile.dto";
 import { UpdateProfileDto, UpdateProfileResultDto } from "./dto/update-profile.dto";
 import { CompressedFile } from "src/common/decorator/compress.decorator";
 
@@ -14,16 +14,18 @@ import { CompressedFile } from "src/common/decorator/compress.decorator";
 })
 @Auth()
 export class ProfileController {
-    constructor(private profileService: ProfileService) { }
+    constructor(
+        private profileService: ProfileService
+    ) { }
 
     @Get()
-    async fetch(@User() userDto: GetUserDto): Promise<FetchProfileResultDto> {
-        return await this.profileService.fetch(userDto);
+    async getProfile(@User() userDto: GetUserDto): Promise<GetProfileResultDto> {
+        return await this.profileService.getProfile(userDto);
     }
 
     @Put()
     @UseInterceptors(FileInterceptor('avatar'))
-    async update(
+    async updateProfile(
         @Body() updateDto: UpdateProfileDto,
         @User() userDto: GetUserDto,
         @UploadedFile(
@@ -41,6 +43,6 @@ export class ProfileController {
         if (avatar) {
             updateDto.avatar = avatar.filename;
         }
-        return await this.profileService.update(updateDto, userDto);
+        return await this.profileService.updateProfile(updateDto, userDto);
     }
 }

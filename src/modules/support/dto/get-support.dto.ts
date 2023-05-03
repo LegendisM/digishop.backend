@@ -2,14 +2,14 @@ import { PartialType } from "@nestjs/swagger";
 import { ISupport } from "../interface/support.interface";
 import { IdentifierDto } from "src/common/dto/identifier.dto";
 
-export class FindOneSupportDto extends PartialType(
+export class GetSupportDto extends PartialType(
     IdentifierDto
 ) { }
 
-export class FindOneSupportResultDto {
+export class GetSupportResultDto {
     support: ISupport;
 }
 
-export class FindAllSupportsResultDto {
+export class GetSupportsResultDto {
     supports: ISupport[]
 }

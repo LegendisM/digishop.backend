@@ -13,7 +13,7 @@ export class UserController {
     constructor() { }
 
     @Get()
-    async index(@User() userDto: GetUserDto) {
+    async getUser(@User() userDto: GetUserDto) {
         return _.omit(userDto, ['_id']);
     }
 }

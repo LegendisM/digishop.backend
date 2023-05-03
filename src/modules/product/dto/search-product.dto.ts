@@ -4,7 +4,7 @@ import { PaginationDto } from "src/common/dto/pagination.dto";
 import { BaseProductDto } from "./base-product.dto";
 import { IsOptional, IsString } from "class-validator";
 
-export class FindAllProducts extends IntersectionType(
+export class SearchProdcutsDto extends IntersectionType(
     PickType(BaseProductDto, ['name', 'category', 'description'] as const),
     PaginationDto
 ) {
@@ -13,7 +13,7 @@ export class FindAllProducts extends IntersectionType(
     owner?: string;
 }
 
-export class FindAllProductsResultDto {
+export class SearchProdcutsResultDto {
     current_page: number;
     total_pages: number;
     products: IProduct[]

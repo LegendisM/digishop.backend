@@ -15,10 +15,10 @@ export class AuthService {
 
     async signup(authDto: AuthDto): Promise<AuthResultDto> {
         let token = '', message = '', state = false;
-        let user = await this.userService.findOne({ username: authDto.username });
+        let user = await this.userService.getUser({ username: authDto.username });
 
         if (!user) {
-            user = await this.userService.create({
+            user = await this.userService.createUser({
                 username: authDto.username,
                 password: bcrypt.hashSync(authDto.password, 6)
             });
@@ -34,7 +34,7 @@ export class AuthService {
 
     async signin(authDto: AuthDto): Promise<AuthResultDto> {
         let token = '', message = '', state = false;
-        let user = await this.userService.findOne({ username: authDto.username });
+        let user = await this.userService.getUser({ username: authDto.username });
 
         if (user && bcrypt.compareSync(authDto.password, user.password)) {
             token = this.jwtService.sign({ id: user.id, username: user.username });

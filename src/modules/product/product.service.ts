@@ -4,7 +4,7 @@ import { ForbiddenException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { Product } from "./schema/product.schema";
-import { FindAllProducts, FindAllProductsResultDto } from "./dto/find-product.dto";
+import { SearchProdcutsDto, SearchProdcutsResultDto } from "./dto/search-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { IProduct } from "./interface/product.interface";
 import { DeleteProductDto } from "./dto/delete-product.dto";
@@ -17,20 +17,20 @@ export class ProductService {
         @InjectModel(Product.name) private productModel: Model<Product>
     ) { }
 
-    async create(createDto: CreateProductDto, userDto: GetUserDto): Promise<IProduct> {
+    async createProduct(createDto: CreateProductDto, userDto: GetUserDto): Promise<IProduct> {
         return await this.productModel.create({ ...createDto, ...{ owner: userDto._id } });
     }
 
-    async findById(id: string): Promise<IProduct> {
+    async getProductById(id: string): Promise<IProduct> {
         return await this.productModel.findById(id);
     }
 
-    async findAll(findAllDto: FindAllProducts): Promise<FindAllProductsResultDto> {
-        let { page, limit, owner = '' } = findAllDto;
+    async searchProducts(searchDto: SearchProdcutsDto): Promise<SearchProdcutsResultDto> {
+        let { page, limit, owner = '' } = searchDto;
         let filter = ['category', 'name', 'description'].filter((key) => {
-            return findAllDto[key].length > 0;
+            return searchDto[key].length > 0;
         }).map((key) => {
-            return ({ [key]: { [(key == 'category' ? "$in" : "$regex")]: findAllDto[key] } });
+            return ({ [key]: { [(key == 'category' ? "$in" : "$regex")]: searchDto[key] } });
         });
         let productCount = await this.productModel.count({
             $or: filter.length > 0 ? filter : [{}],
@@ -47,16 +47,16 @@ export class ProductService {
         };
     }
 
-    async update(updateDto: UpdateProductDto, userDto: GetUserDto): Promise<IProduct> {
-        let product = await this.findById(updateDto.id);
+    async updateProduct(updateDto: UpdateProductDto, userDto: GetUserDto): Promise<IProduct> {
+        let product = await this.getProductById(updateDto.id);
         if (!userDto._id.equals(product.owner._id) && !userDto.roles.includes(Role.ADMIN)) {
             throw new ForbiddenException();
         }
         return product.updateOne(updateDto);
     }
 
-    async remove(deleteDto: DeleteProductDto, userDto: GetUserDto): Promise<IProduct> {
-        let product = await this.findById(deleteDto.id);
+    async deleteProduct(deleteDto: DeleteProductDto, userDto: GetUserDto): Promise<IProduct> {
+        let product = await this.getProductById(deleteDto.id);
         if (!userDto._id.equals(product.owner._id) && !userDto.roles.includes(Role.ADMIN)) {
             throw new ForbiddenException();
         }

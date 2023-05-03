@@ -4,7 +4,7 @@ import { Auth } from "../auth/decorator/auth.decorator";
 import { CreateSupportDto } from "./dto/create-support.dto";
 import { User } from "../user/decorator/user.decorator";
 import { GetUserDto } from "../user/dto/get-user.dto";
-import { FindAllSupportsResultDto, FindOneSupportDto, FindOneSupportResultDto } from "./dto/find-support.dto";
+import { GetSupportDto, GetSupportResultDto, GetSupportsResultDto } from "./dto/get-support.dto";
 import { Roles } from "../user/decorator/role.decorator";
 import { Role } from "../user/interface/role.interface";
 
@@ -20,23 +20,23 @@ export class SupportController {
 
     @Get()
     @Roles(Role.ADMIN)
-    async findAll(): Promise<FindAllSupportsResultDto> {
-        return await this.supportService.findAll();
+    async getSupports(): Promise<GetSupportsResultDto> {
+        return await this.supportService.searchSupports();
     }
 
     @Get('me')
-    async findAllMe(@User() userDto: GetUserDto): Promise<FindAllSupportsResultDto> {
-        return await this.supportService.findAll(userDto)
+    async getOwnSupports(@User() userDto: GetUserDto): Promise<GetSupportsResultDto> {
+        return await this.supportService.searchSupports(userDto);
     }
 
     @Get(':id')
-    async findById(@Param() findOneDto: FindOneSupportDto, @User() userDto: GetUserDto): Promise<FindOneSupportResultDto> {
-        return await this.supportService.findById(findOneDto, userDto);
+    async getSupportById(@Param() findOneDto: GetSupportDto, @User() userDto: GetUserDto): Promise<GetSupportResultDto> {
+        return await this.supportService.getSupportById(findOneDto, userDto);
     }
 
     @Post()
-    async create(@Body() createDto: CreateSupportDto, @User() userDto: GetUserDto) {
-        let support = await this.supportService.create(createDto, userDto);
+    async createSupport(@Body() createDto: CreateSupportDto, @User() userDto: GetUserDto) {
+        let support = await this.supportService.createSupport(createDto, userDto);
         return { state: !!support }
     }
 }
