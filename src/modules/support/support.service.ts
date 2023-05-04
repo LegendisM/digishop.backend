@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { Model } from "mongoose";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Support } from "./schema/support.schema";
 import { CreateSupportDto } from "./dto/create-support.dto";
@@ -24,7 +24,8 @@ export class SupportService {
     }
 
     async findById(id: string): Promise<ISupport> {
-        return await this.supportModel.findById(id);
+        let support = await this.supportModel.findById(id);
+        return support;
     }
 
     async findByOwner(owner: string): Promise<ISupport[]> {

@@ -3,6 +3,7 @@ import { Auth } from "../auth/decorator/auth.decorator";
 import { GetUserDto } from "./dto/get-user.dto";
 import _ from "lodash";
 import { User } from "./decorator/user.decorator";
+import { BaseResponseResultDto } from "src/common/dto/base-response.dto";
 
 @Controller({
     path: 'user',
@@ -13,7 +14,9 @@ export class UserController {
     constructor() { }
 
     @Get()
-    async findMe(@User() userDto: GetUserDto): Promise<GetUserDto> {
-        return userDto;
+    async findMe(
+        @User() userDto: GetUserDto
+    ): Promise<BaseResponseResultDto<GetUserDto>> {
+        return { data: userDto };
     }
 }

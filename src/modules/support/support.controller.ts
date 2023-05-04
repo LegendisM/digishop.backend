@@ -4,11 +4,13 @@ import { Auth } from "../auth/decorator/auth.decorator";
 import { CreateSupportDto } from "./dto/create-support.dto";
 import { User } from "../user/decorator/user.decorator";
 import { GetUserDto } from "../user/dto/get-user.dto";
-import { FindSupportDto, FindSupportResultDto, FindSupportsResultDto } from "./dto/find-support.dto";
+import { FindSupportDto } from "./dto/find-support.dto";
 import { Roles } from "../user/decorator/role.decorator";
 import { Role } from "../user/interface/role.interface";
 import { PolicyFactory } from "../policy/policy.factory";
 import { PolicyAction } from "../policy/interface/policy.interface";
+import { BaseResponseResultDto } from "src/common/dto/base-response.dto";
+import { ISupport } from "./interface/support.interface";
 
 @Controller({
     path: 'support',
@@ -23,36 +25,45 @@ export class SupportController {
 
     @Get()
     @Roles(Role.ADMIN)
-    async findAll(): Promise<FindSupportsResultDto> {
+    async findAll(): Promise<BaseResponseResultDto<ISupport[]>> {
         let supports = await this.supportService.findAll();
         return {
-            supports
+            data: supports
         }
     }
 
     @Get('me')
-    async findMe(@User() userDto: GetUserDto): Promise<FindSupportsResultDto> {
+    async findMe(
+        @User() userDto: GetUserDto
+    ): Promise<BaseResponseResultDto<ISupport[]>> {
         let supports = await this.supportService.findByOwner(userDto.id);
         return {
-            supports
+            data: supports
         }
     }
 
     @Get(':id')
-    async findById(@Param() findOneDto: FindSupportDto, @User() userDto: GetUserDto): Promise<FindSupportResultDto> {
+    async findById(
+        @Param() findOneDto: FindSupportDto,
+        @User() userDto: GetUserDto
+    ): Promise<BaseResponseResultDto<ISupport>> {
         let support = await this.supportService.findById(findOneDto.id);
         // * check policy
         if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Read, support)) {
             throw new ForbiddenException();
         }
         return {
-            support
+            state: !!support,
+            data: support
         };
     }
 
     @Post()
-    async create(@Body() createDto: CreateSupportDto, @User() userDto: GetUserDto) {
+    async create(
+        @Body() createDto: CreateSupportDto,
+        @User() userDto: GetUserDto
+    ): Promise<BaseResponseResultDto<ISupport>> {
         let support = await this.supportService.create(createDto, userDto.id);
-        return { state: !!support }
+        return { state: !!support, data: support }
     }
 }

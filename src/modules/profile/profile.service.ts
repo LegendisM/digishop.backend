@@ -1,8 +1,8 @@
 import fs from "fs";
+import _ from "lodash";
 import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
-import { FindProfileResultDto } from "./dto/find-profile.dto";
-import { UpdateProfileDto, UpdateProfileResultDto } from "./dto/update-profile.dto";
+import { UpdateProfileDto } from "./dto/update-profile.dto";
 import { LanguageService } from "../language/language.service";
 
 @Injectable()
@@ -12,21 +12,13 @@ export class ProfileService {
         private languageService: LanguageService
     ) { }
 
-    async find(id: string): Promise<FindProfileResultDto> {
-        let username = '', email = '', nationalcode = '', avatar = '', state = false;
+    async find(id: string): Promise<object> {
         let user = await this.userService.findById(id);
-        if (user) {
-            username = user.username;
-            email = user.email;
-            nationalcode = user.nationalcode;
-            avatar = user.avatar;
-            state = true;
-        }
-        return { state, username, email, nationalcode, avatar };
+        return user ? _.pick(user, ['username', 'email', 'nationalcode', 'avatar']) : null;
     }
 
-    async update(updateDto: UpdateProfileDto, id: string): Promise<UpdateProfileResultDto> {
-        let message = '', state = false;
+    async update(updateDto: UpdateProfileDto, id: string): Promise<{ state: boolean, message: string }> {
+        let message = 'already_information_used', state = false;
         let user = await this.userService.findById(id);
         let existUser = await this.userService.findOne({
             $and: [
@@ -35,7 +27,7 @@ export class ProfileService {
             ]
         });
 
-        if (!existUser) {
+        if (!existUser && user) {
             await user.updateOne(updateDto);
             // * unlink oldest avatar from storage
             if (updateDto.avatar) {
@@ -48,8 +40,6 @@ export class ProfileService {
             }
             state = true;
             message = 'update_success';
-        } else {
-            message = 'already_information_used';
         }
 
         return { state, message: this.languageService.get(message) };

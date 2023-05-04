@@ -3,7 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { JwtService } from "@nestjs/jwt";
 import { LanguageService } from "../language/language.service";
-import { AuthDto, AuthResultDto } from "./dto/auth.dto";
+import { AuthDto } from "./dto/auth.dto";
+import { IAuthResult } from "./interface/auth.interface";
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
         private languageService: LanguageService
     ) { }
 
-    async signup(authDto: AuthDto): Promise<AuthResultDto> {
+    async signup(authDto: AuthDto): Promise<IAuthResult> {
         let token = '', message = '', state = false;
         let user = await this.userService.findOne({ username: authDto.username });
 
@@ -32,7 +33,7 @@ export class AuthService {
         return { state, user, token, message: this.languageService.get(message) };
     }
 
-    async signin(authDto: AuthDto): Promise<AuthResultDto> {
+    async signin(authDto: AuthDto): Promise<IAuthResult> {
         let token = '', message = '', state = false;
         let user = await this.userService.findOne({ username: authDto.username });
 

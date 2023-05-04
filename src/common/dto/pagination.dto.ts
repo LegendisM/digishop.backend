@@ -1,4 +1,4 @@
-import { IsPositive } from "class-validator";
+import { IsNumber, IsPositive } from "class-validator";
 
 export class PaginationDto {
     @IsPositive()
@@ -6,4 +6,12 @@ export class PaginationDto {
 
     @IsPositive()
     limit: number;
+}
+
+export class PaginationResultDto {
+    @IsNumber()
+    current_page: number;
+
+    @IsNumber()
+    total_pages: number;
 }

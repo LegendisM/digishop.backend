@@ -1,6 +1,8 @@
-import { Controller, Body, Post, UnauthorizedException, ConflictException, HttpCode, HttpStatus } from "@nestjs/common";
+import { Controller, Body, Post, HttpCode, HttpStatus } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthDto } from "./dto/auth.dto";
+import { BaseResponseResultDto } from "src/common/dto/base-response.dto";
+import { IAuthResult } from "./interface/auth.interface";
 
 @Controller({
     path: 'auth',
@@ -13,21 +15,27 @@ export class AuthController {
 
     @Post('signup')
     @HttpCode(HttpStatus.OK)
-    async signup(@Body() authDto: AuthDto) {
-        let { state, token, message } = await this.authService.signup(authDto);
-        if (!state) {
-            throw new ConflictException(message);
-        }
-        return { state, token, message };
+    async signup(
+        @Body() authDto: AuthDto
+    ): Promise<BaseResponseResultDto<IAuthResult>> {
+        let result, { state, token, message } = await this.authService.signup(authDto);
+        return {
+            state,
+            data: result,
+            message
+        };
     }
 
     @Post('signin')
     @HttpCode(HttpStatus.OK)
-    async signin(@Body() authDto: AuthDto) {
-        let { state, token, message } = await this.authService.signin(authDto);
-        if (!state) {
-            throw new UnauthorizedException(message);
-        }
-        return { state, token, message };
+    async signin(
+        @Body() authDto: AuthDto
+    ): Promise<BaseResponseResultDto<IAuthResult>> {
+        let result, { state, token, message } = await this.authService.signin(authDto);
+        return {
+            state,
+            data: result,
+            message
+        };
     }
 }

@@ -11,3 +11,9 @@ export interface IProduct extends Document {
     cover: string;
     images: string[];
 }
+
+export interface IProductList {
+    current_page: number;
+    total_pages: number;
+    products: IProduct[];
+}
