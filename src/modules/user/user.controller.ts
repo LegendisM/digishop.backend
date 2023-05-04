@@ -13,7 +13,7 @@ export class UserController {
     constructor() { }
 
     @Get()
-    async findMe(@User() userDto: GetUserDto) {
-        return _.omit(userDto, ['_id']);
+    async findMe(@User() userDto: GetUserDto): Promise<GetUserDto> {
+        return userDto;
     }
 }

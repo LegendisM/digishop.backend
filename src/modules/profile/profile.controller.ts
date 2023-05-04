@@ -20,7 +20,7 @@ export class ProfileController {
 
     @Get()
     async findMe(@User() userDto: GetUserDto): Promise<FindProfileResultDto> {
-        return await this.profileService.find(userDto);
+        return await this.profileService.find(userDto.id);
     }
 
     @Put()
@@ -43,6 +43,6 @@ export class ProfileController {
         if (avatar) {
             updateDto.avatar = avatar.filename;
         }
-        return await this.profileService.update(updateDto, userDto);
+        return await this.profileService.update(updateDto, userDto.id);
     }
 }

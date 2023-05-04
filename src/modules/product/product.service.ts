@@ -1,6 +1,6 @@
 import fs from "fs";
 import mongoose, { Model } from "mongoose";
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { Product } from "./schema/product.schema";
@@ -8,19 +8,15 @@ import { FindProdcutsDto, FindProdcutsResultDto } from "./dto/find-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { IProduct } from "./interface/product.interface";
 import { DeleteProductDto } from "./dto/delete-product.dto";
-import { GetUserDto } from "../user/dto/get-user.dto";
-import { PolicyFactory } from "../policy/policy.factory";
-import { PolicyAction } from "../policy/interface/policy.interface";
 
 @Injectable()
 export class ProductService {
     constructor(
-        @InjectModel(Product.name) private productModel: Model<Product>,
-        private policyFactory: PolicyFactory
+        @InjectModel(Product.name) private productModel: Model<Product>
     ) { }
 
-    async create(createDto: CreateProductDto, userDto: GetUserDto): Promise<IProduct> {
-        return await this.productModel.create({ ...createDto, ...{ owner: userDto._id } });
+    async create(createDto: CreateProductDto, owner: string): Promise<IProduct> {
+        return await this.productModel.create({ ...createDto, ...{ owner: owner } });
     }
 
     async findById(id: string): Promise<IProduct> {
@@ -49,21 +45,13 @@ export class ProductService {
         };
     }
 
-    async update(updateDto: UpdateProductDto, userDto: GetUserDto): Promise<IProduct> {
+    async update(updateDto: UpdateProductDto): Promise<IProduct> {
         let product = await this.findById(updateDto.id);
-        // * check policy
-        if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Update, product)) {
-            throw new ForbiddenException();
-        }
         return product.updateOne(updateDto);
     }
 
-    async delete(deleteDto: DeleteProductDto, userDto: GetUserDto): Promise<IProduct> {
+    async delete(deleteDto: DeleteProductDto): Promise<IProduct> {
         let product = await this.findById(deleteDto.id);
-        // * ckeck policy
-        if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Delete, product)) {
-            throw new ForbiddenException();
-        }
         // * unlink cover from storage
         if (product.cover) {
             try {

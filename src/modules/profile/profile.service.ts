@@ -2,7 +2,6 @@ import fs from "fs";
 import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { FindProfileResultDto } from "./dto/find-profile.dto";
-import { GetUserDto } from "../user/dto/get-user.dto";
 import { UpdateProfileDto, UpdateProfileResultDto } from "./dto/update-profile.dto";
 import { LanguageService } from "../language/language.service";
 
@@ -13,8 +12,7 @@ export class ProfileService {
         private languageService: LanguageService
     ) { }
 
-    async find(userDto: GetUserDto): Promise<FindProfileResultDto> {
-        let { id } = userDto;
+    async find(id: string): Promise<FindProfileResultDto> {
         let username = '', email = '', nationalcode = '', avatar = '', state = false;
         let user = await this.userService.findById(id);
         if (user) {
@@ -27,8 +25,7 @@ export class ProfileService {
         return { state, username, email, nationalcode, avatar };
     }
 
-    async update(updateDto: UpdateProfileDto, userDto: GetUserDto): Promise<UpdateProfileResultDto> {
-        let { id } = userDto;
+    async update(updateDto: UpdateProfileDto, id: string): Promise<UpdateProfileResultDto> {
         let message = '', state = false;
         let user = await this.userService.findById(id);
         let existUser = await this.userService.findOne({
