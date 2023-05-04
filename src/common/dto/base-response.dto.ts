@@ -1,4 +1,4 @@
-import { IsBoolean, IsObject, IsString } from "class-validator";
+import { IsBoolean, IsString } from "class-validator";
 
 export class BaseResponseResultDto<T> {
     @IsBoolean()
@@ -7,5 +7,5 @@ export class BaseResponseResultDto<T> {
     data: T = {} as T;
 
     @IsString()
-    message?: string = 'no-content';
+    message?: string;
 }

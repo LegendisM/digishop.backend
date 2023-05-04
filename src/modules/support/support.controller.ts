@@ -28,6 +28,7 @@ export class SupportController {
     async findAll(): Promise<BaseResponseResultDto<ISupport[]>> {
         let supports = await this.supportService.findAll();
         return {
+            state: !!supports,
             data: supports
         }
     }
@@ -38,6 +39,7 @@ export class SupportController {
     ): Promise<BaseResponseResultDto<ISupport[]>> {
         let supports = await this.supportService.findByOwner(userDto.id);
         return {
+            state: !!supports,
             data: supports
         }
     }
@@ -64,6 +66,9 @@ export class SupportController {
         @User() userDto: GetUserDto
     ): Promise<BaseResponseResultDto<ISupport>> {
         let support = await this.supportService.create(createDto, userDto.id);
-        return { state: !!support, data: support }
+        return {
+            state: !!support,
+            data: support
+        }
     }
 }

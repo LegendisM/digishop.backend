@@ -17,11 +17,11 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     async signup(
         @Body() authDto: AuthDto
-    ): Promise<BaseResponseResultDto<IAuthResult>> {
-        let result, { state, token, message } = await this.authService.signup(authDto);
+    ): Promise<BaseResponseResultDto<{ token: string }>> {
+        let { state, token, message } = await this.authService.signup(authDto);
         return {
             state,
-            data: result,
+            data: { token },
             message
         };
     }
@@ -30,11 +30,11 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     async signin(
         @Body() authDto: AuthDto
-    ): Promise<BaseResponseResultDto<IAuthResult>> {
-        let result, { state, token, message } = await this.authService.signin(authDto);
+    ): Promise<BaseResponseResultDto<{ token: string }>> {
+        let { state, token, message } = await this.authService.signin(authDto);
         return {
             state,
-            data: result,
+            data: { token },
             message
         };
     }

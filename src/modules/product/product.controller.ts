@@ -80,7 +80,7 @@ export class ProductController {
     async update(
         @Body() updateDto: UpdateProductDto,
         @User() userDto: GetUserDto
-    ): Promise<BaseResponseResultDto<IProduct>> {
+    ): Promise<BaseResponseResultDto<boolean>> {
         let product = await this.productService.findById(updateDto.id);
         // * check policy
         if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Update, product)) {
@@ -89,7 +89,7 @@ export class ProductController {
         product = await this.productService.update(updateDto);
         return {
             state: !!product,
-            data: product
+            data: !!product
         };
     }
 
