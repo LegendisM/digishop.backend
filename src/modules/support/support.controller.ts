@@ -4,7 +4,7 @@ import { Auth } from "../auth/decorator/auth.decorator";
 import { CreateSupportDto } from "./dto/create-support.dto";
 import { User } from "../user/decorator/user.decorator";
 import { GetUserDto } from "../user/dto/get-user.dto";
-import { GetSupportDto, GetSupportResultDto, GetSupportsResultDto } from "./dto/get-support.dto";
+import { FindSupportDto, FindSupportResultDto, FindSupportsResultDto } from "./dto/find-support.dto";
 import { Roles } from "../user/decorator/role.decorator";
 import { Role } from "../user/interface/role.interface";
 
@@ -20,23 +20,23 @@ export class SupportController {
 
     @Get()
     @Roles(Role.ADMIN)
-    async getSupports(): Promise<GetSupportsResultDto> {
-        return await this.supportService.searchSupports();
+    async findAll(): Promise<FindSupportsResultDto> {
+        return await this.supportService.findAll();
     }
 
     @Get('me')
-    async getOwnSupports(@User() userDto: GetUserDto): Promise<GetSupportsResultDto> {
-        return await this.supportService.searchSupports(userDto);
+    async findMe(@User() userDto: GetUserDto): Promise<FindSupportsResultDto> {
+        return await this.supportService.findByOwner(userDto);
     }
 
     @Get(':id')
-    async getSupportById(@Param() findOneDto: GetSupportDto, @User() userDto: GetUserDto): Promise<GetSupportResultDto> {
-        return await this.supportService.getSupportById(findOneDto, userDto);
+    async findById(@Param() findOneDto: FindSupportDto, @User() userDto: GetUserDto): Promise<FindSupportResultDto> {
+        return await this.supportService.findById(findOneDto, userDto);
     }
 
     @Post()
-    async createSupport(@Body() createDto: CreateSupportDto, @User() userDto: GetUserDto) {
-        let support = await this.supportService.createSupport(createDto, userDto);
+    async create(@Body() createDto: CreateSupportDto, @User() userDto: GetUserDto) {
+        let support = await this.supportService.create(createDto, userDto);
         return { state: !!support }
     }
 }

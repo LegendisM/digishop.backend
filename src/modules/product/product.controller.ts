@@ -4,7 +4,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { Roles } from "../user/decorator/role.decorator";
 import { Role } from "../user/interface/role.interface";
 import { IProduct } from "./interface/product.interface";
-import { SearchProdcutsDto, SearchProdcutsResultDto } from "./dto/search-product.dto";
+import { FindProdcutsDto, FindProdcutsResultDto } from "./dto/find-product.dto";
 import { DeleteProductDto } from "./dto/delete-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { User } from "../user/decorator/user.decorator";
@@ -23,15 +23,15 @@ export class ProductController {
 
     @Post('find')
     @HttpCode(HttpStatus.OK)
-    async getProducts(@Body() searchDto: SearchProdcutsDto): Promise<SearchProdcutsResultDto> {
-        return await this.productService.searchProducts(searchDto);
+    async findAll(@Body() findDto: FindProdcutsDto): Promise<FindProdcutsResultDto> {
+        return await this.productService.findAll(findDto);
     }
 
     @Post()
     @Roles(Role.ADMIN, Role.MODERATOR)
     @UseInterceptors(FileInterceptor('cover'))
     @HttpCode(HttpStatus.CREATED)
-    async createProduct(
+    async create(
         @Body() createDto: CreateProductDto,
         @User() userDto: GetUserDto,
         @UploadedFile(
@@ -47,20 +47,20 @@ export class ProductController {
         cover: Express.Multer.File
     ): Promise<IProduct> {
         createDto.cover = cover.filename;
-        return await this.productService.createProduct(createDto, userDto);
+        return await this.productService.create(createDto, userDto);
     }
 
     @Put()
     @Roles(Role.ADMIN, Role.MODERATOR)
-    async updateProduct(@Body() updateDto: UpdateProductDto, @User() userDto: GetUserDto): Promise<{ state: boolean }> {
-        let state = await this.productService.updateProduct(updateDto, userDto);
+    async update(@Body() updateDto: UpdateProductDto, @User() userDto: GetUserDto): Promise<{ state: boolean }> {
+        let state = await this.productService.update(updateDto, userDto);
         return { state: !!state };
     }
 
     @Delete()
     @Roles(Role.ADMIN, Role.MODERATOR)
-    async deleteProduct(@Body() deleteDto: DeleteProductDto, @User() userDto: GetUserDto): Promise<{ state: boolean }> {
-        let state = await this.productService.deleteProduct(deleteDto, userDto);
+    async delete(@Body() deleteDto: DeleteProductDto, @User() userDto: GetUserDto): Promise<{ state: boolean }> {
+        let state = await this.productService.delete(deleteDto, userDto);
         return { state: !!state };
     }
 }

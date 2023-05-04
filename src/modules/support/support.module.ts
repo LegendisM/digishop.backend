@@ -13,6 +13,9 @@ import { Support, SupportSchema } from "./schema/support.schema";
     ],
     controllers: [SupportController],
     providers: [SupportService],
-    exports: [SupportService]
+    exports: [
+        SupportService,
+        MongooseModule
+    ]
 })
 export class SupportModule { }

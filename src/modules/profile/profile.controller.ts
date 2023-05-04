@@ -4,7 +4,7 @@ import { ProfileService } from "./profile.service";
 import { Auth } from "../auth/decorator/auth.decorator";
 import { User } from "../user/decorator/user.decorator";
 import { GetUserDto } from "../user/dto/get-user.dto";
-import { GetProfileResultDto } from "./dto/get-profile.dto";
+import { FindProfileResultDto } from "./dto/find-profile.dto";
 import { UpdateProfileDto, UpdateProfileResultDto } from "./dto/update-profile.dto";
 import { CompressedFile } from "src/common/decorator/compress.decorator";
 
@@ -19,13 +19,13 @@ export class ProfileController {
     ) { }
 
     @Get()
-    async getProfile(@User() userDto: GetUserDto): Promise<GetProfileResultDto> {
-        return await this.profileService.getProfile(userDto);
+    async findMe(@User() userDto: GetUserDto): Promise<FindProfileResultDto> {
+        return await this.profileService.find(userDto);
     }
 
     @Put()
     @UseInterceptors(FileInterceptor('avatar'))
-    async updateProfile(
+    async update(
         @Body() updateDto: UpdateProfileDto,
         @User() userDto: GetUserDto,
         @UploadedFile(
@@ -43,6 +43,6 @@ export class ProfileController {
         if (avatar) {
             updateDto.avatar = avatar.filename;
         }
-        return await this.profileService.updateProfile(updateDto, userDto);
+        return await this.profileService.update(updateDto, userDto);
     }
 }
