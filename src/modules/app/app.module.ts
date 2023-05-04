@@ -7,6 +7,7 @@ import { AuthModule } from "../auth/auth.module";
 import { ProductModule } from "../product/product.module";
 import { SupportModule } from "../support/support.module";
 import { ProfileModule } from "../profile/profile.module";
+import { PolicyModule } from "../policy/policy.module";
 
 @Module({
     imports: [
@@ -20,6 +21,7 @@ import { ProfileModule } from "../profile/profile.module";
         }),
         UserModule,
         AuthModule,
+        PolicyModule,
         ProfileModule,
         ProductModule,
         SupportModule

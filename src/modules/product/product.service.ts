@@ -9,12 +9,14 @@ import { UpdateProductDto } from "./dto/update-product.dto";
 import { IProduct } from "./interface/product.interface";
 import { DeleteProductDto } from "./dto/delete-product.dto";
 import { GetUserDto } from "../user/dto/get-user.dto";
-import { Role } from "../user/interface/role.interface";
+import { PolicyFactory } from "../policy/policy.factory";
+import { PolicyAction } from "../policy/interface/policy.interface";
 
 @Injectable()
 export class ProductService {
     constructor(
-        @InjectModel(Product.name) private productModel: Model<Product>
+        @InjectModel(Product.name) private productModel: Model<Product>,
+        private policyFactory: PolicyFactory
     ) { }
 
     async create(createDto: CreateProductDto, userDto: GetUserDto): Promise<IProduct> {
@@ -49,7 +51,8 @@ export class ProductService {
 
     async update(updateDto: UpdateProductDto, userDto: GetUserDto): Promise<IProduct> {
         let product = await this.findById(updateDto.id);
-        if (!userDto._id.equals(product.owner._id) && !userDto.roles.includes(Role.ADMIN)) {
+        // * check policy
+        if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Update, product)) {
             throw new ForbiddenException();
         }
         return product.updateOne(updateDto);
@@ -57,7 +60,8 @@ export class ProductService {
 
     async delete(deleteDto: DeleteProductDto, userDto: GetUserDto): Promise<IProduct> {
         let product = await this.findById(deleteDto.id);
-        if (!userDto._id.equals(product.owner._id) && !userDto.roles.includes(Role.ADMIN)) {
+        // * ckeck policy
+        if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Delete, product)) {
             throw new ForbiddenException();
         }
         // * unlink cover from storage

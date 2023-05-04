@@ -7,12 +7,14 @@ import { CreateSupportDto } from "./dto/create-support.dto";
 import { GetUserDto } from "../user/dto/get-user.dto";
 import { ISupport } from "./interface/support.interface";
 import { FindSupportDto, FindSupportResultDto, FindSupportsResultDto } from "./dto/find-support.dto";
-import { Role } from "../user/interface/role.interface";
+import { PolicyFactory } from "../policy/policy.factory";
+import { PolicyAction } from "../policy/interface/policy.interface";
 
 @Injectable()
 export class SupportService {
     constructor(
-        @InjectModel(Support.name) private supportModel: Model<Support>
+        @InjectModel(Support.name) private supportModel: Model<Support>,
+        private policyFactory: PolicyFactory
     ) { }
 
     async create(createDto: CreateSupportDto, userDto: GetUserDto): Promise<ISupport> {
@@ -32,7 +34,8 @@ export class SupportService {
 
     async findById(findOneDto: FindSupportDto, userDto: GetUserDto): Promise<FindSupportResultDto> {
         let support = await this.supportModel.findById(findOneDto.id);
-        if (support && !userDto._id.equals(support.owner._id) && !userDto.roles.includes(Role.ADMIN)) {
+        // * check policy
+        if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Read, support)) {
             throw new ForbiddenException();
         }
         return { support };

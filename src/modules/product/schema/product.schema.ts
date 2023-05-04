@@ -2,9 +2,10 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document, Types } from "mongoose";
 import { IUser } from "src/modules/user/interface/user.interface";
 import { User } from "src/modules/user/schema/user.schema";
+import { IProduct } from "../interface/product.interface";
 
 @Schema({ timestamps: true })
-export class Product extends Document {
+export class Product extends Document implements IProduct {
     @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: User.name })
     owner: Types.ObjectId | IUser;
 
@@ -30,4 +31,4 @@ export class Product extends Document {
     images: string[];
 }
 
-export const ProductSchema = SchemaFactory.createForClass(Product);
+export const ProductSchema = SchemaFactory.createForClass<Product>(Product);

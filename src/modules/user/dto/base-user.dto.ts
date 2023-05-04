@@ -10,7 +10,6 @@ export class BaseUserDto {
 
     @IsString()
     @Length(3, 25)
-    @Exclude()
     password: string;
 
     @IsEmail()
