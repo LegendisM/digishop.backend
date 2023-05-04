@@ -4,7 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { Product } from "./schema/product.schema";
-import { FindProdcutsDto, FindProdcutsResultDto } from "./dto/find-product.dto";
+import { FindProductResultDto, FindProductsDto, FindProductsResultDto } from "./dto/find-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { IProduct } from "./interface/product.interface";
 import { DeleteProductDto } from "./dto/delete-product.dto";
@@ -19,11 +19,12 @@ export class ProductService {
         return await this.productModel.create({ ...createDto, ...{ owner: owner } });
     }
 
-    async findById(id: string): Promise<IProduct> {
-        return await this.productModel.findById(id);
+    async findById(id: string): Promise<FindProductResultDto> {
+        let product = await this.productModel.findById(id);
+        return { state: !!product, product };
     }
 
-    async findAll(findDto: FindProdcutsDto): Promise<FindProdcutsResultDto> {
+    async findAll(findDto: FindProductsDto): Promise<FindProductsResultDto> {
         let { page, limit, owner = '' } = findDto;
         let filter = ['category', 'name', 'description'].filter((key) => {
             return findDto[key].length > 0;
@@ -46,12 +47,12 @@ export class ProductService {
     }
 
     async update(updateDto: UpdateProductDto): Promise<IProduct> {
-        let product = await this.findById(updateDto.id);
+        let { product } = await this.findById(updateDto.id);
         return product.updateOne(updateDto);
     }
 
     async delete(deleteDto: DeleteProductDto): Promise<IProduct> {
-        let product = await this.findById(deleteDto.id);
+        let { product } = await this.findById(deleteDto.id);
         // * unlink cover from storage
         if (product.cover) {
             try {
