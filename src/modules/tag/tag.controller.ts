@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post } from "@nestjs/common";
 import { TagService } from "./tag.service";
 import { BaseResponseResultDto } from "src/common/dto/base-response.dto";
 import { ITag } from "./interface/tag.interface";
@@ -27,7 +27,7 @@ export class TagController {
     @Post()
     @Roles(Role.ADMIN)
     async create(
-        createDto: CreateTagDto
+        @Body() createDto: CreateTagDto
     ): Promise<BaseResponseResultDto<ITag>> {
         let tag = await this.tagService.create(createDto);
         return {
@@ -39,7 +39,7 @@ export class TagController {
     @Delete()
     @Roles(Role.ADMIN)
     async delete(
-        deleteDto: IdentifierDto
+        @Body() deleteDto: IdentifierDto
     ): Promise<BaseResponseResultDto<ITag>> {
         let tag = await this.tagService.delete(deleteDto.id);
         return {

@@ -1,4 +1,4 @@
-import { IsNumber, IsPositive } from "class-validator";
+import { IsPositive } from "class-validator";
 
 export class PaginationDto {
     @IsPositive()
@@ -8,10 +8,7 @@ export class PaginationDto {
     limit: number;
 }
 
-export class PaginationResultDto {
-    @IsNumber()
+export interface IPaginationResult {
     current_page: number;
-
-    @IsNumber()
     total_pages: number;
 }

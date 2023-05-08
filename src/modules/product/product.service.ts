@@ -7,15 +7,19 @@ import { Product } from "./schema/product.schema";
 import { FindProductsDto } from "./dto/find-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { IProduct, IProductList } from "./interface/product.interface";
+import { TagService } from "../tag/tag.service";
+import { ITag } from "../tag/interface/tag.interface";
 
 @Injectable()
 export class ProductService {
     constructor(
-        @InjectModel(Product.name) private productModel: Model<Product>
+        @InjectModel(Product.name) private productModel: Model<Product>,
+        private tagService: TagService
     ) { }
 
     async create(createDto: CreateProductDto, owner: string): Promise<IProduct> {
-        return await this.productModel.create({ ...createDto, ...{ owner: owner } });
+        let tags: ITag[] = await this.tagService.findByNames(createDto.tags);
+        return await this.productModel.create({ ...createDto, ...{ owner: owner }, ...{ tags } });
     }
 
     async findById(id: string): Promise<IProduct> {
@@ -26,11 +30,14 @@ export class ProductService {
         findDto: FindProductsDto
     ): Promise<IProductList> {
         let { page, limit, owner = '' } = findDto;
-        let filter = ['tags', 'name', 'description'].filter((key) => {
+        let filter = ['name', 'description'].filter((key) => {
             return findDto[key].length > 0;
         }).map((key) => {
-            return ({ [key]: { [(key == 'tags' ? "$in" : "$regex")]: findDto[key] } });
+            return ({ [key]: { $regex: findDto[key] } });
         });
+        if (findDto.tags.length > 0) {
+            Object.assign(filter, { 'tags.name': { $in: findDto.tags } });
+        }
         let productCount = await this.productModel.count({
             $or: filter.length > 0 ? filter : [{}],
             owner: (mongoose.isValidObjectId(owner) ? owner : { $ne: null })
@@ -62,6 +69,6 @@ export class ProductService {
                 }
             } catch (error) { }
         }
-        return await product.deleteOne();
+        return product ? await product.deleteOne() : null;
     }
 }

@@ -7,6 +7,7 @@ import { MulterModule } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { extname } from "path";
 import { uniqueSuffix } from "src/common/helpers/random.helper";
+import { TagModule } from "../tag/tag.module";
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { uniqueSuffix } from "src/common/helpers/random.helper";
                 },
             })
         }),
+        TagModule
     ],
     controllers: [ProductController],
     providers: [ProductService],

@@ -23,8 +23,12 @@ export class TagService {
         return await this.tagModel.findById(id);
     }
 
+    async findByNames(names: string[]): Promise<ITag[]> {
+        return await this.tagModel.find({ name: { $in: names } });
+    }
+
     async delete(id: string): Promise<ITag> {
         let tag = await this.findById(id);
-        return await tag.deleteOne();
+        return tag ? await tag.deleteOne() : null;
     }
 }

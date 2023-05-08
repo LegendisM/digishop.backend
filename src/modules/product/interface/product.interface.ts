@@ -1,4 +1,5 @@
 import { Document, Types } from "mongoose";
+import { IPaginationResult } from "src/common/dto/pagination.dto";
 import { ITag } from "src/modules/tag/interface/tag.interface";
 import { IUser } from "src/modules/user/interface/user.interface";
 
@@ -13,8 +14,6 @@ export interface IProduct extends Document {
     images: string[];
 }
 
-export interface IProductList {
-    current_page: number;
-    total_pages: number;
+export interface IProductList extends IPaginationResult {
     products: IProduct[];
 }
