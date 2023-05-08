@@ -5,9 +5,9 @@ import { IsArray } from "class-validator";
 
 export class CreateProductDto extends OmitType(
     BaseProductDto,
-    ['owner', 'category']
+    ['owner', 'tags']
 ) {
     @IsArray()
     @Transform(({ value }) => value.split(','))
-    category: string[]
+    tags: string[]
 }

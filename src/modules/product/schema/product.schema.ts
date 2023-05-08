@@ -3,6 +3,8 @@ import mongoose, { Document, Types } from "mongoose";
 import { IUser } from "src/modules/user/interface/user.interface";
 import { User } from "src/modules/user/schema/user.schema";
 import { IProduct } from "../interface/product.interface";
+import { Tag } from "src/modules/tag/schema/tag.schema";
+import { ITag } from "src/modules/tag/interface/tag.interface";
 
 @Schema({ timestamps: true })
 export class Product extends Document implements IProduct {
@@ -12,8 +14,8 @@ export class Product extends Document implements IProduct {
     @Prop({ required: true })
     name: string;
 
-    @Prop({ type: [String], required: true })
-    category: string[];
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: Tag.name }] })
+    tags: (Types.ObjectId | ITag)[];
 
     @Prop({ default: "" })
     description: string;

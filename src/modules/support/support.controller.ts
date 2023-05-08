@@ -4,13 +4,13 @@ import { Auth } from "../auth/decorator/auth.decorator";
 import { CreateSupportDto } from "./dto/create-support.dto";
 import { User } from "../user/decorator/user.decorator";
 import { GetUserDto } from "../user/dto/get-user.dto";
-import { FindSupportDto } from "./dto/find-support.dto";
 import { Roles } from "../user/decorator/role.decorator";
 import { Role } from "../user/interface/role.interface";
 import { PolicyFactory } from "../policy/policy.factory";
 import { PolicyAction } from "../policy/interface/policy.interface";
 import { BaseResponseResultDto } from "src/common/dto/base-response.dto";
 import { ISupport } from "./interface/support.interface";
+import { IdentifierDto } from "src/common/dto/identifier.dto";
 
 @Controller({
     path: 'support',
@@ -46,7 +46,7 @@ export class SupportController {
 
     @Get(':id')
     async findById(
-        @Param() findOneDto: FindSupportDto,
+        @Param() findOneDto: IdentifierDto,
         @User() userDto: GetUserDto
     ): Promise<BaseResponseResultDto<ISupport>> {
         let support = await this.supportService.findById(findOneDto.id);

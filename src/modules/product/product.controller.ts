@@ -5,7 +5,6 @@ import { Roles } from "../user/decorator/role.decorator";
 import { Role } from "../user/interface/role.interface";
 import { IProduct, IProductList } from "./interface/product.interface";
 import { FindProductsDto } from "./dto/find-product.dto";
-import { DeleteProductDto } from "./dto/delete-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { User } from "../user/decorator/user.decorator";
 import { GetUserDto } from "../user/dto/get-user.dto";
@@ -96,7 +95,7 @@ export class ProductController {
     @Delete()
     @Roles(Role.ADMIN, Role.MODERATOR)
     async delete(
-        @Body() deleteDto: DeleteProductDto,
+        @Body() deleteDto: IdentifierDto,
         @User() userDto: GetUserDto
     ): Promise<BaseResponseResultDto<boolean>> {
         let product = await this.productService.findById(deleteDto.id);
@@ -104,7 +103,7 @@ export class ProductController {
         if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Delete, product)) {
             throw new ForbiddenException();
         }
-        product = await this.productService.delete(deleteDto);
+        product = await this.productService.delete(deleteDto.id);
         return {
             state: !!product,
             data: !!product

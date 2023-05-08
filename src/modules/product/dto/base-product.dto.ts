@@ -11,7 +11,7 @@ export class BaseProductDto {
 
     @IsArray()
     @IsString({ each: true })
-    category: string[];
+    tags: string[];
 
     @IsString()
     @MaxLength(250)

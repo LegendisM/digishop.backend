@@ -4,7 +4,7 @@ import { BaseProductDto } from "./base-product.dto";
 import { IsOptional, IsString } from "class-validator";
 
 export class FindProductsDto extends IntersectionType(
-    PickType(BaseProductDto, ['name', 'category', 'description'] as const),
+    PickType(BaseProductDto, ['name', 'tags', 'description'] as const),
     PaginationDto
 ) {
     @IsOptional()

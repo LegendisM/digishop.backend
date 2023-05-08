@@ -7,7 +7,6 @@ import { Product } from "./schema/product.schema";
 import { FindProductsDto } from "./dto/find-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { IProduct, IProductList } from "./interface/product.interface";
-import { DeleteProductDto } from "./dto/delete-product.dto";
 
 @Injectable()
 export class ProductService {
@@ -27,10 +26,10 @@ export class ProductService {
         findDto: FindProductsDto
     ): Promise<IProductList> {
         let { page, limit, owner = '' } = findDto;
-        let filter = ['category', 'name', 'description'].filter((key) => {
+        let filter = ['tags', 'name', 'description'].filter((key) => {
             return findDto[key].length > 0;
         }).map((key) => {
-            return ({ [key]: { [(key == 'category' ? "$in" : "$regex")]: findDto[key] } });
+            return ({ [key]: { [(key == 'tags' ? "$in" : "$regex")]: findDto[key] } });
         });
         let productCount = await this.productModel.count({
             $or: filter.length > 0 ? filter : [{}],
@@ -52,8 +51,8 @@ export class ProductService {
         return product.updateOne(updateDto);
     }
 
-    async delete(deleteDto: DeleteProductDto): Promise<IProduct> {
-        let product = await this.findById(deleteDto.id);
+    async delete(id: string): Promise<IProduct> {
+        let product = await this.findById(id);
         // * unlink cover from storage
         if (product.cover) {
             try {
