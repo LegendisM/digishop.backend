@@ -1,8 +1,7 @@
 import { Controller, Body, Post, HttpCode, HttpStatus } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthDto } from "./dto/auth.dto";
-import { BaseResponseResultDto } from "src/common/dto/base-response.dto";
-import { IAuthResult } from "./interface/auth.interface";
+import { IResponseResult } from "src/common/interface/response.interface";
 
 @Controller({
     path: 'auth',
@@ -17,7 +16,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     async signup(
         @Body() authDto: AuthDto
-    ): Promise<BaseResponseResultDto<{ token: string }>> {
+    ): Promise<IResponseResult<{ token: string }>> {
         let { state, token, message } = await this.authService.signup(authDto);
         return {
             state,
@@ -30,7 +29,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     async signin(
         @Body() authDto: AuthDto
-    ): Promise<BaseResponseResultDto<{ token: string }>> {
+    ): Promise<IResponseResult<{ token: string }>> {
         let { state, token, message } = await this.authService.signin(authDto);
         return {
             state,

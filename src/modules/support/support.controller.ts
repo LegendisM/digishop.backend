@@ -8,7 +8,7 @@ import { Roles } from "../user/decorator/role.decorator";
 import { Role } from "../user/interface/role.interface";
 import { PolicyFactory } from "../policy/policy.factory";
 import { PolicyAction } from "../policy/interface/policy.interface";
-import { BaseResponseResultDto } from "src/common/dto/base-response.dto";
+import { IResponseResult } from "src/common/interface/response.interface";
 import { ISupport } from "./interface/support.interface";
 import { IdentifierDto } from "src/common/dto/identifier.dto";
 
@@ -25,8 +25,8 @@ export class SupportController {
 
     @Get()
     @Roles(Role.ADMIN)
-    async findAll(): Promise<BaseResponseResultDto<ISupport[]>> {
-        let supports = await this.supportService.findAll();
+    async getSupports(): Promise<IResponseResult<ISupport[]>> {
+        let supports = await this.supportService.getSupports();
         return {
             state: !!supports,
             data: supports
@@ -34,10 +34,10 @@ export class SupportController {
     }
 
     @Get('me')
-    async findMe(
+    async getOwnSupports(
         @User() userDto: GetUserDto
-    ): Promise<BaseResponseResultDto<ISupport[]>> {
-        let supports = await this.supportService.findByOwner(userDto.id);
+    ): Promise<IResponseResult<ISupport[]>> {
+        let supports = await this.supportService.getSupportsByOwner(userDto.id);
         return {
             state: !!supports,
             data: supports
@@ -45,11 +45,11 @@ export class SupportController {
     }
 
     @Get(':id')
-    async findById(
+    async getSupportById(
         @Param() findOneDto: IdentifierDto,
         @User() userDto: GetUserDto
-    ): Promise<BaseResponseResultDto<ISupport>> {
-        let support = await this.supportService.findById(findOneDto.id);
+    ): Promise<IResponseResult<ISupport>> {
+        let support = await this.supportService.getSupportById(findOneDto.id);
         // * check policy
         if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Read, support)) {
             throw new ForbiddenException();
@@ -61,11 +61,11 @@ export class SupportController {
     }
 
     @Post()
-    async create(
+    async createSupport(
         @Body() createDto: CreateSupportDto,
         @User() userDto: GetUserDto
-    ): Promise<BaseResponseResultDto<ISupport>> {
-        let support = await this.supportService.create(createDto, userDto.id);
+    ): Promise<IResponseResult<ISupport>> {
+        let support = await this.supportService.createSupport(createDto, userDto.id);
         return {
             state: !!support,
             data: support

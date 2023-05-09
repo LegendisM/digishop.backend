@@ -3,7 +3,7 @@ import { PaginationDto } from "src/common/dto/pagination.dto";
 import { BaseProductDto } from "./base-product.dto";
 import { IsOptional, IsString } from "class-validator";
 
-export class FindProductsDto extends IntersectionType(
+export class GetProductsFilterDto extends IntersectionType(
     PickType(BaseProductDto, ['name', 'tags', 'description'] as const),
     PaginationDto
 ) {

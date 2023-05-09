@@ -11,24 +11,24 @@ export class TagService {
         @InjectModel(Tag.name) private tagModel: Model<Tag>
     ) { }
 
-    async create(createDto: CreateTagDto): Promise<ITag> {
+    async createTag(createDto: CreateTagDto): Promise<ITag> {
         return await this.tagModel.create(createDto);
     }
 
-    async findAll(): Promise<ITag[]> {
+    async getTags(): Promise<ITag[]> {
         return await this.tagModel.find();
     }
 
-    async findById(id: string): Promise<ITag> {
+    async getTagById(id: string): Promise<ITag> {
         return await this.tagModel.findById(id);
     }
 
-    async findByNames(names: string[]): Promise<ITag[]> {
+    async getTagsByNames(names: string[]): Promise<ITag[]> {
         return await this.tagModel.find({ name: { $in: names } });
     }
 
-    async delete(id: string): Promise<ITag> {
-        let tag = await this.findById(id);
+    async deleteTag(id: string): Promise<ITag> {
+        let tag = await this.getTagById(id);
         return tag ? await tag.deleteOne() : null;
     }
 }

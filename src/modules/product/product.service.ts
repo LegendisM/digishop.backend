@@ -4,7 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { Product } from "./schema/product.schema";
-import { FindProductsDto } from "./dto/find-product.dto";
+import { GetProductsFilterDto } from "./dto/get-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { IProduct, IProductList } from "./interface/product.interface";
 import { TagService } from "../tag/tag.service";
@@ -17,26 +17,26 @@ export class ProductService {
         private tagService: TagService
     ) { }
 
-    async create(createDto: CreateProductDto, owner: string): Promise<IProduct> {
-        let tags: ITag[] = await this.tagService.findByNames(createDto.tags);
+    async createProduct(createDto: CreateProductDto, owner: string): Promise<IProduct> {
+        let tags: ITag[] = await this.tagService.getTagsByNames(createDto.tags);
         return await this.productModel.create({ ...createDto, ...{ owner: owner }, ...{ tags } });
     }
 
-    async findById(id: string): Promise<IProduct> {
+    async getProductById(id: string): Promise<IProduct> {
         return await this.productModel.findById(id);
     }
 
-    async findAll(
-        findDto: FindProductsDto
+    async getProducts(
+        filterDto: GetProductsFilterDto
     ): Promise<IProductList> {
-        let { page, limit, owner = '' } = findDto;
+        let { page, limit, owner = '' } = filterDto;
         let filter = ['name', 'description'].filter((key) => {
-            return findDto[key].length > 0;
+            return filterDto[key].length > 0;
         }).map((key) => {
-            return ({ [key]: { $regex: findDto[key] } });
+            return ({ [key]: { $regex: filterDto[key] } });
         });
-        if (findDto.tags.length > 0) {
-            Object.assign(filter, { 'tags.name': { $in: findDto.tags } });
+        if (filterDto.tags.length > 0) {
+            Object.assign(filter, { 'tags.name': { $in: filterDto.tags } });
         }
         let productCount = await this.productModel.count({
             $or: filter.length > 0 ? filter : [{}],
@@ -53,13 +53,13 @@ export class ProductService {
         };
     }
 
-    async update(updateDto: UpdateProductDto): Promise<IProduct> {
-        let product = await this.findById(updateDto.id);
+    async updateProduct(updateDto: UpdateProductDto): Promise<IProduct> {
+        let product = await this.getProductById(updateDto.id);
         return product.updateOne(updateDto);
     }
 
-    async delete(id: string): Promise<IProduct> {
-        let product = await this.findById(id);
+    async deleteProduct(id: string): Promise<IProduct> {
+        let product = await this.getProductById(id);
         // * unlink cover from storage
         if (product.cover) {
             try {

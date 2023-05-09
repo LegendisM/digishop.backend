@@ -4,7 +4,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { Roles } from "../user/decorator/role.decorator";
 import { Role } from "../user/interface/role.interface";
 import { IProduct, IProductList } from "./interface/product.interface";
-import { FindProductsDto } from "./dto/find-product.dto";
+import { GetProductsFilterDto } from "./dto/get-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { User } from "../user/decorator/user.decorator";
 import { GetUserDto } from "../user/dto/get-user.dto";
@@ -13,7 +13,7 @@ import { CompressedFile } from "src/common/decorator/compress.decorator";
 import { PolicyFactory } from "../policy/policy.factory";
 import { PolicyAction } from "../policy/interface/policy.interface";
 import { IdentifierDto } from "src/common/dto/identifier.dto";
-import { BaseResponseResultDto } from "src/common/dto/base-response.dto";
+import { IResponseResult } from "src/common/interface/response.interface";
 
 @Controller({
     path: 'product',
@@ -27,20 +27,20 @@ export class ProductController {
 
     @Post('find')
     @HttpCode(HttpStatus.OK)
-    async findAll(
-        @Body() findDto: FindProductsDto
-    ): Promise<BaseResponseResultDto<IProductList>> {
-        let products = await this.productService.findAll(findDto);
+    async getProducts(
+        @Body() filterDto: GetProductsFilterDto
+    ): Promise<IResponseResult<IProductList>> {
+        let products = await this.productService.getProducts(filterDto);
         return {
             data: products
         };
     }
 
     @Get('find/:id')
-    async findById(
-        @Param() findDto: IdentifierDto
-    ): Promise<BaseResponseResultDto<IProduct>> {
-        let product = await this.productService.findById(findDto.id);
+    async getProductById(
+        @Param() filterDto: IdentifierDto
+    ): Promise<IResponseResult<IProduct>> {
+        let product = await this.productService.getProductById(filterDto.id);
         return {
             state: !!product,
             data: product
@@ -51,7 +51,7 @@ export class ProductController {
     @Roles(Role.ADMIN, Role.MODERATOR)
     @UseInterceptors(FileInterceptor('cover'))
     @HttpCode(HttpStatus.CREATED)
-    async create(
+    async createProduct(
         @Body() createDto: CreateProductDto,
         @User() userDto: GetUserDto,
         @UploadedFile(
@@ -65,9 +65,9 @@ export class ProductController {
         )
         @CompressedFile({ width: 800, quality: 80 })
         cover: Express.Multer.File
-    ): Promise<BaseResponseResultDto<IProduct>> {
+    ): Promise<IResponseResult<IProduct>> {
         createDto.cover = cover.filename;
-        let product = await this.productService.create(createDto, userDto.id);
+        let product = await this.productService.createProduct(createDto, userDto.id);
         return {
             state: !!product,
             data: product
@@ -76,16 +76,16 @@ export class ProductController {
 
     @Put()
     @Roles(Role.ADMIN, Role.MODERATOR)
-    async update(
+    async updateProduct(
         @Body() updateDto: UpdateProductDto,
         @User() userDto: GetUserDto
-    ): Promise<BaseResponseResultDto<boolean>> {
-        let product = await this.productService.findById(updateDto.id);
+    ): Promise<IResponseResult<boolean>> {
+        let product = await this.productService.getProductById(updateDto.id);
         // * check policy
         if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Update, product)) {
             throw new ForbiddenException();
         }
-        product = await this.productService.update(updateDto);
+        product = await this.productService.updateProduct(updateDto);
         return {
             state: !!product,
             data: !!product
@@ -94,16 +94,16 @@ export class ProductController {
 
     @Delete()
     @Roles(Role.ADMIN, Role.MODERATOR)
-    async delete(
+    async deleteProduct(
         @Body() deleteDto: IdentifierDto,
         @User() userDto: GetUserDto
-    ): Promise<BaseResponseResultDto<boolean>> {
-        let product = await this.productService.findById(deleteDto.id);
+    ): Promise<IResponseResult<boolean>> {
+        let product = await this.productService.getProductById(deleteDto.id);
         // * ckeck policy
         if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Delete, product)) {
             throw new ForbiddenException();
         }
-        product = await this.productService.delete(deleteDto.id);
+        product = await this.productService.deleteProduct(deleteDto.id);
         return {
             state: !!product,
             data: !!product

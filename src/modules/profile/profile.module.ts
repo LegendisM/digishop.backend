@@ -7,7 +7,7 @@ import { ProfileLanguageStorage } from "./profile.language";
 import { MulterModule } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { extname } from "path";
-import { uniqueSuffix } from "src/common/helpers/random.helper";
+import { uniqueSuffix } from "src/common/helpers/text.helper";
 
 @Module({
     imports: [

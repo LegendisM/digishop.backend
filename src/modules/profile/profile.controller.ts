@@ -6,7 +6,7 @@ import { User } from "../user/decorator/user.decorator";
 import { GetUserDto } from "../user/dto/get-user.dto";
 import { UpdateProfileDto } from "./dto/update-profile.dto";
 import { CompressedFile } from "src/common/decorator/compress.decorator";
-import { BaseResponseResultDto } from "src/common/dto/base-response.dto";
+import { IResponseResult } from "src/common/interface/response.interface";
 
 @Controller({
     path: 'profile',
@@ -19,10 +19,10 @@ export class ProfileController {
     ) { }
 
     @Get()
-    async findMe(
+    async getOwnProfile(
         @User() userDto: GetUserDto
-    ): Promise<BaseResponseResultDto<object>> {
-        let profile = await this.profileService.find(userDto.id);
+    ): Promise<IResponseResult<object>> {
+        let profile = await this.profileService.getProfileById(userDto.id);
         return {
             state: !!profile,
             data: profile
@@ -31,7 +31,7 @@ export class ProfileController {
 
     @Put()
     @UseInterceptors(FileInterceptor('avatar'))
-    async update(
+    async updateProfile(
         @Body() updateDto: UpdateProfileDto,
         @User() userDto: GetUserDto,
         @UploadedFile(
@@ -45,11 +45,11 @@ export class ProfileController {
         )
         @CompressedFile({ width: 250, quality: 75 })
         avatar: Express.Multer.File
-    ): Promise<BaseResponseResultDto<boolean>> {
+    ): Promise<IResponseResult<boolean>> {
         if (avatar) {
             updateDto.avatar = avatar.filename;
         }
-        let result = await this.profileService.update(updateDto, userDto.id);
+        let result = await this.profileService.updateProfile(updateDto, userDto.id);
         return {
             data: result.state,
             ...result

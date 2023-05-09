@@ -12,15 +12,15 @@ export class ProfileService {
         private languageService: LanguageService
     ) { }
 
-    async find(id: string): Promise<object> {
-        let user = await this.userService.findById(id);
+    async getProfileById(id: string): Promise<object> {
+        let user = await this.userService.getUserById(id);
         return user ? _.pick(user, ['username', 'email', 'nationalcode', 'avatar']) : null;
     }
 
-    async update(updateDto: UpdateProfileDto, id: string): Promise<{ state: boolean, message: string }> {
+    async updateProfile(updateDto: UpdateProfileDto, id: string): Promise<{ state: boolean, message: string }> {
         let message = 'already_information_used', state = false;
-        let user = await this.userService.findById(id);
-        let existUser = await this.userService.findOne({
+        let user = await this.userService.getUserById(id);
+        let existUser = await this.userService.getOneUser({
             $and: [
                 { $or: [{ username: updateDto.username }, { email: updateDto.email }, { nationalcode: updateDto.nationalcode }] },
                 { _id: { $ne: id } }
