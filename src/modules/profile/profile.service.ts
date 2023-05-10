@@ -3,13 +3,13 @@ import _ from "lodash";
 import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { UpdateProfileDto } from "./dto/update-profile.dto";
-import { LanguageService } from "../language/language.service";
+import { I18nService } from "nestjs-i18n";
 
 @Injectable()
 export class ProfileService {
     constructor(
         private userService: UserService,
-        private languageService: LanguageService
+        private i18nService: I18nService
     ) { }
 
     async getProfileById(id: string): Promise<object> {
@@ -42,6 +42,6 @@ export class ProfileService {
             message = 'update_success';
         }
 
-        return { state, message: this.languageService.get(message) };
+        return { state, message: this.i18nService.t(`profile.${message}`) };
     }
 }

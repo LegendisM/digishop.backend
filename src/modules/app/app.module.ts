@@ -10,12 +10,22 @@ import { ProfileModule } from "../profile/profile.module";
 import { PolicyModule } from "../policy/policy.module";
 import { TagModule } from "../tag/tag.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { HeaderResolver, I18nModule } from "nestjs-i18n";
+import path from "path";
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
             envFilePath: './.env'
+        }),
+        I18nModule.forRoot({
+            fallbackLanguage: 'en',
+            loaderOptions: {
+                path: path.join(__dirname, '../../i18n/'),
+                watch: true
+            },
+            resolvers: [HeaderResolver]
         }),
         ScheduleModule.forRoot(),
         ThrottlerModule.forRoot({

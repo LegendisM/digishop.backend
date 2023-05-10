@@ -2,16 +2,16 @@ import bcrypt from "bcrypt";
 import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { JwtService } from "@nestjs/jwt";
-import { LanguageService } from "../language/language.service";
 import { AuthDto } from "./dto/auth.dto";
 import { IAuthResult } from "./interface/auth.interface";
+import { I18nService } from "nestjs-i18n";
 
 @Injectable()
 export class AuthService {
     constructor(
         private userService: UserService,
         private jwtService: JwtService,
-        private languageService: LanguageService
+        private i18nService: I18nService
     ) { }
 
     async signup(authDto: AuthDto): Promise<IAuthResult> {
@@ -30,7 +30,7 @@ export class AuthService {
             message = 'already_username_used';
         }
 
-        return { state, user, token, message: this.languageService.get(message) };
+        return { state, user, token, message: this.i18nService.t(`auth.${message}`) };
     }
 
     async signin(authDto: AuthDto): Promise<IAuthResult> {
@@ -45,6 +45,6 @@ export class AuthService {
             message = 'invalid_information';
         }
 
-        return { state, user, token, message: this.languageService.get(message) };
+        return { state, user, token, message: this.i18nService.t(`auth.${message}`) };
     }
 }

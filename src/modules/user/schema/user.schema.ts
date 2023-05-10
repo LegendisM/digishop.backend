@@ -1,8 +1,8 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
-import { Languages } from "../../language/interface/language.interface";
 import { Role } from "../interface/role.interface";
 import { Document } from "mongoose";
 import { IUser } from "../interface/user.interface";
+import { Languages } from "../interface/language.interface";
 
 @Schema({ timestamps: true })
 export class User extends Document implements IUser {
