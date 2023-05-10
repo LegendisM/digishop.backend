@@ -9,16 +9,24 @@ import { SupportModule } from "../support/support.module";
 import { ProfileModule } from "../profile/profile.module";
 import { PolicyModule } from "../policy/policy.module";
 import { TagModule } from "../tag/tag.module";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
     imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+            envFilePath: './.env'
+        }),
         ScheduleModule.forRoot(),
         ThrottlerModule.forRoot({
             ttl: 60,
             limit: 40
         }),
-        MongooseModule.forRoot(process.env.DB_URI, {
-            dbName: process.env.DB_NAME
+        MongooseModule.forRootAsync({
+            useFactory: (configService: ConfigService) => ({
+                uri: configService.get<string>('MONGODB_URI'),
+            }),
+            inject: [ConfigService],
         }),
         UserModule,
         AuthModule,
