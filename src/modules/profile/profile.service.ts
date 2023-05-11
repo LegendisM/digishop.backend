@@ -17,7 +17,7 @@ export class ProfileService {
         return user ? _.pick(user, ['username', 'email', 'nationalcode', 'avatar']) : null;
     }
 
-    async updateProfile(updateDto: UpdateProfileDto, id: string): Promise<{ state: boolean, message: string }> {
+    async updateProfile(id: string, updateDto: UpdateProfileDto): Promise<{ state: boolean, message: string }> {
         let message = 'already_information_used', state = false;
         let user = await this.userService.getUserById(id);
         let existUser = await this.userService.getOneUser({

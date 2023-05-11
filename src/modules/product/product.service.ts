@@ -53,8 +53,8 @@ export class ProductService {
         };
     }
 
-    async updateProduct(updateDto: UpdateProductDto): Promise<IProduct> {
-        let product = await this.getProductById(updateDto.id);
+    async updateProduct(id: string, updateDto: UpdateProductDto): Promise<IProduct> {
+        let product = await this.getProductById(id);
         return product.updateOne(updateDto);
     }
 

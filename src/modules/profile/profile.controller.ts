@@ -7,9 +7,11 @@ import { GetUserDto } from "../user/dto/get-user.dto";
 import { UpdateProfileDto } from "./dto/update-profile.dto";
 import { CompressedFile } from "src/common/decorator/compress.decorator";
 import { IResponseResult } from "src/common/interface/response.interface";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('profiles')
 @Controller({
-    path: 'profile',
+    path: 'profiles',
     version: '1'
 })
 @Auth()
@@ -18,7 +20,7 @@ export class ProfileController {
         private profileService: ProfileService
     ) { }
 
-    @Get()
+    @Get('me')
     async getOwnProfile(
         @User() userDto: GetUserDto
     ): Promise<IResponseResult<object>> {
@@ -49,7 +51,7 @@ export class ProfileController {
         if (avatar) {
             updateDto.avatar = avatar.filename;
         }
-        let result = await this.profileService.updateProfile(updateDto, userDto.id);
+        let result = await this.profileService.updateProfile(userDto.id, updateDto);
         return {
             data: result.state,
             ...result

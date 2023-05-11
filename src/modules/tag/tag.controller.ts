@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { TagService } from "./tag.service";
 import { IResponseResult } from "src/common/interface/response.interface";
 import { ITag } from "./interface/tag.interface";
@@ -6,9 +6,11 @@ import { Roles } from "../user/decorator/role.decorator";
 import { Role } from "../user/interface/role.interface";
 import { CreateTagDto } from "./dto/create-tag.dto";
 import { IdentifierDto } from "src/common/dto/identifier.dto";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('tags')
 @Controller({
-    path: 'tag',
+    path: 'tags',
     version: '1'
 })
 export class TagController {
@@ -36,12 +38,12 @@ export class TagController {
         }
     }
 
-    @Delete()
+    @Delete(':id')
     @Roles(Role.ADMIN)
     async deleteTag(
-        @Body() deleteDto: IdentifierDto
+        @Param() { id }: IdentifierDto
     ): Promise<IResponseResult<ITag>> {
-        let tag = await this.tagService.deleteTag(deleteDto.id);
+        let tag = await this.tagService.deleteTag(id);
         return {
             state: !!tag,
             data: tag

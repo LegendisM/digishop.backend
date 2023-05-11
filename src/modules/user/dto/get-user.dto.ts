@@ -1,6 +1,6 @@
 import { IsMongoId } from "class-validator";
 import { Types } from "mongoose";
-import { IntersectionType, PickType } from "@nestjs/swagger";
+import { ApiProperty, IntersectionType, PickType } from "@nestjs/swagger";
 import { IdentifierDto } from "src/common/dto/identifier.dto";
 import { BaseUserDto } from "./base-user.dto";
 

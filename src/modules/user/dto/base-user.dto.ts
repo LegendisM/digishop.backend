@@ -4,32 +4,48 @@ import { Languages } from "../../../common/interface/language.interface";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class BaseUserDto {
-    @ApiProperty()
+    @ApiProperty({
+        required: true,
+        minLength: 3,
+        maxLength: 20
+    })
     @IsString()
-    @Length(3, 25)
+    @Length(3, 20)
     username: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        required: true,
+        minLength: 3,
+        maxLength: 20
+    })
     @IsString()
-    @Length(3, 25)
+    @Length(3, 20)
     password: string;
 
     @ApiProperty()
     @IsEmail()
     email: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        minLength: 10,
+        maxLength: 10
+    })
     @IsString()
     @Length(10, 10)
     nationalcode: string;
 
-    @ApiProperty()
-    @IsEnum(Languages)
-    language: string;
-
-    @ApiProperty()
+    @ApiProperty({
+        enum: Role,
+        isArray: true
+    })
     @IsArray()
     roles: Role[];
+
+    @ApiProperty({
+        enum: Languages
+    })
+    @IsEnum(Languages)
+    language: string;
 
     @ApiProperty()
     @IsOptional()

@@ -2,7 +2,9 @@ import { Controller, Body, Post, HttpCode, HttpStatus } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthDto } from "./dto/auth.dto";
 import { IResponseResult } from "src/common/interface/response.interface";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('auth')
 @Controller({
     path: 'auth',
     version: '1'

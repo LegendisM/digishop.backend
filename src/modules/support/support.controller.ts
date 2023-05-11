@@ -11,9 +11,11 @@ import { PolicyAction } from "../policy/interface/policy.interface";
 import { IResponseResult } from "src/common/interface/response.interface";
 import { ISupport } from "./interface/support.interface";
 import { IdentifierDto } from "src/common/dto/identifier.dto";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('supports')
 @Controller({
-    path: 'support',
+    path: 'supports',
     version: '1'
 })
 @Auth()
@@ -46,10 +48,10 @@ export class SupportController {
 
     @Get(':id')
     async getSupportById(
-        @Param() findOneDto: IdentifierDto,
+        @Param() { id }: IdentifierDto,
         @User() userDto: GetUserDto
     ): Promise<IResponseResult<ISupport>> {
-        let support = await this.supportService.getSupportById(findOneDto.id);
+        let support = await this.supportService.getSupportById(id);
         // * check policy
         if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Read, support)) {
             throw new ForbiddenException();
