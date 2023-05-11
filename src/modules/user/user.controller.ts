@@ -14,7 +14,7 @@ export class UserController {
     constructor() { }
 
     @Get()
-    async findMe(
+    async getOwn(
         @User() userDto: GetUserDto
     ): Promise<IResponseResult<GetUserDto>> {
         return { data: userDto };

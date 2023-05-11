@@ -2,8 +2,8 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import sharp from 'sharp';
 
 export const CompressedFile = createParamDecorator(
-    async (options: { width?: number; quality?: number }, ctx: ExecutionContext) => {
-        const req = ctx.switchToHttp().getRequest();
+    async (options: { width?: number; quality?: number }, context: ExecutionContext) => {
+        const req = context.switchToHttp().getRequest();
 
         if (!req.file || !req.file.mimetype.startsWith('image/') || !req.file.path) {
             return req.file;

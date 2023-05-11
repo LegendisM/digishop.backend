@@ -6,6 +6,7 @@ import { AppModule } from './modules/app/app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -24,7 +25,16 @@ async function bootstrap() {
   app.use(helmet({ crossOriginResourcePolicy: false }));
 
   // * static assets
-  app.useStaticAssets(path.join(__dirname, '..', 'public'), { index: false, prefix: '/public' })
+  app.useStaticAssets(path.join(__dirname, '..', 'public'), { index: false, prefix: '/public' });
+
+  // * swagger
+  const documentConfig = new DocumentBuilder()
+    .setTitle('Digital Shop API')
+    .setDescription('Swagger API Documention')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, documentConfig);
+  SwaggerModule.setup('/document', app, document);
 
   await app.listen(configService.get<number>('MAIN_PORT'));
 }
