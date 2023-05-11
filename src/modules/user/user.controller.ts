@@ -1,10 +1,10 @@
+import _ from "lodash";
 import { Controller, Get } from "@nestjs/common";
 import { Auth } from "../auth/decorator/auth.decorator";
-import { GetUserDto } from "./dto/get-user.dto";
-import _ from "lodash";
-import { User } from "./decorator/user.decorator";
+import { CurrentUser } from "./decorator/user.decorator";
 import { IResponseResult } from "src/common/interface/response.interface";
 import { ApiTags } from "@nestjs/swagger";
+import { IUser } from "./interface/user.interface";
 
 @ApiTags('users')
 @Controller({
@@ -17,8 +17,13 @@ export class UserController {
 
     @Get('me')
     async getOwn(
-        @User() userDto: GetUserDto
-    ): Promise<IResponseResult<GetUserDto>> {
-        return { data: userDto };
+        @CurrentUser() user: IUser
+    ): Promise<IResponseResult<any>> {
+        return {
+            data: _.pick(
+                user,
+                ['username', 'email', 'avatar', 'roles', 'language']
+            )
+        };
     }
 }

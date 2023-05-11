@@ -2,8 +2,7 @@ import { Body, Controller, ForbiddenException, Get, Param, Post } from "@nestjs/
 import { SupportService } from "./support.service";
 import { Auth } from "../auth/decorator/auth.decorator";
 import { CreateSupportDto } from "./dto/create-support.dto";
-import { User } from "../user/decorator/user.decorator";
-import { GetUserDto } from "../user/dto/get-user.dto";
+import { CurrentUser } from "../user/decorator/user.decorator";
 import { Roles } from "../user/decorator/role.decorator";
 import { Role } from "../user/interface/role.interface";
 import { PolicyFactory } from "../policy/policy.factory";
@@ -12,6 +11,7 @@ import { IResponseResult } from "src/common/interface/response.interface";
 import { ISupport } from "./interface/support.interface";
 import { IdentifierDto } from "src/common/dto/identifier.dto";
 import { ApiTags } from "@nestjs/swagger";
+import { IUser } from "../user/interface/user.interface";
 
 @ApiTags('supports')
 @Controller({
@@ -37,9 +37,9 @@ export class SupportController {
 
     @Get('me')
     async getOwnSupports(
-        @User() userDto: GetUserDto
+        @CurrentUser() user: IUser
     ): Promise<IResponseResult<ISupport[]>> {
-        let supports = await this.supportService.getSupportsByOwner(userDto.id);
+        let supports = await this.supportService.getSupportsByOwner(user.id);
         return {
             state: !!supports,
             data: supports
@@ -49,11 +49,11 @@ export class SupportController {
     @Get(':id')
     async getSupportById(
         @Param() { id }: IdentifierDto,
-        @User() userDto: GetUserDto
+        @CurrentUser() user: IUser
     ): Promise<IResponseResult<ISupport>> {
         let support = await this.supportService.getSupportById(id);
         // * check policy
-        if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Read, support)) {
+        if (this.policyFactory.userAbility(user).cannot(PolicyAction.Read, support)) {
             throw new ForbiddenException();
         }
         return {
@@ -65,9 +65,9 @@ export class SupportController {
     @Post()
     async createSupport(
         @Body() createDto: CreateSupportDto,
-        @User() userDto: GetUserDto
+        @CurrentUser() user: IUser
     ): Promise<IResponseResult<ISupport>> {
-        let support = await this.supportService.createSupport(createDto, userDto.id);
+        let support = await this.supportService.createSupport(createDto, user.id);
         return {
             state: !!support,
             data: support

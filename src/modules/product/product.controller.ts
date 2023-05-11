@@ -6,8 +6,7 @@ import { Role } from "../user/interface/role.interface";
 import { IProduct, IProductList } from "./interface/product.interface";
 import { GetProductsFilterDto } from "./dto/get-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
-import { User } from "../user/decorator/user.decorator";
-import { GetUserDto } from "../user/dto/get-user.dto";
+import { CurrentUser } from "../user/decorator/user.decorator";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CompressedFile } from "src/common/decorator/compress.decorator";
 import { PolicyFactory } from "../policy/policy.factory";
@@ -15,6 +14,7 @@ import { PolicyAction } from "../policy/interface/policy.interface";
 import { IdentifierDto } from "src/common/dto/identifier.dto";
 import { IResponseResult } from "src/common/interface/response.interface";
 import { ApiTags } from "@nestjs/swagger";
+import { IUser } from "../user/interface/user.interface";
 
 @ApiTags('products')
 @Controller({
@@ -55,7 +55,7 @@ export class ProductController {
     @HttpCode(HttpStatus.CREATED)
     async createProduct(
         @Body() createDto: CreateProductDto,
-        @User() userDto: GetUserDto,
+        @CurrentUser() user: IUser,
         @UploadedFile(
             new ParseFilePipe({
                 fileIsRequired: true,
@@ -69,7 +69,7 @@ export class ProductController {
         cover: Express.Multer.File
     ): Promise<IResponseResult<IProduct>> {
         createDto.cover = cover.filename;
-        let product = await this.productService.createProduct(createDto, userDto.id);
+        let product = await this.productService.createProduct(createDto, user.id);
         return {
             state: !!product,
             data: product
@@ -81,11 +81,11 @@ export class ProductController {
     async updateProduct(
         @Param() { id }: IdentifierDto,
         @Body() updateDto: UpdateProductDto,
-        @User() userDto: GetUserDto
+        @CurrentUser() user: IUser
     ): Promise<IResponseResult<boolean>> {
         let product = await this.productService.getProductById(id);
         // * check policy
-        if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Update, product)) {
+        if (this.policyFactory.userAbility(user).cannot(PolicyAction.Update, product)) {
             throw new ForbiddenException();
         }
         product = await this.productService.updateProduct(id, updateDto);
@@ -99,11 +99,11 @@ export class ProductController {
     @Roles(Role.ADMIN, Role.MODERATOR)
     async deleteProduct(
         @Param() { id }: IdentifierDto,
-        @User() userDto: GetUserDto
+        @CurrentUser() user: IUser
     ): Promise<IResponseResult<boolean>> {
         let product = await this.productService.getProductById(id);
         // * ckeck policy
-        if (this.policyFactory.userAbility(userDto).cannot(PolicyAction.Delete, product)) {
+        if (this.policyFactory.userAbility(user).cannot(PolicyAction.Delete, product)) {
             throw new ForbiddenException();
         }
         product = await this.productService.deleteProduct(id);

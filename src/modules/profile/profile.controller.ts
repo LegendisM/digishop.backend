@@ -2,12 +2,12 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { Body, Controller, FileTypeValidator, Get, MaxFileSizeValidator, ParseFilePipe, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { ProfileService } from "./profile.service";
 import { Auth } from "../auth/decorator/auth.decorator";
-import { User } from "../user/decorator/user.decorator";
-import { GetUserDto } from "../user/dto/get-user.dto";
+import { CurrentUser } from "../user/decorator/user.decorator";
 import { UpdateProfileDto } from "./dto/update-profile.dto";
 import { CompressedFile } from "src/common/decorator/compress.decorator";
 import { IResponseResult } from "src/common/interface/response.interface";
 import { ApiTags } from "@nestjs/swagger";
+import { IUser } from "../user/interface/user.interface";
 
 @ApiTags('profiles')
 @Controller({
@@ -22,9 +22,9 @@ export class ProfileController {
 
     @Get('me')
     async getOwnProfile(
-        @User() userDto: GetUserDto
+        @CurrentUser() user: IUser
     ): Promise<IResponseResult<object>> {
-        let profile = await this.profileService.getProfileById(userDto.id);
+        let profile = await this.profileService.getProfileById(user.id);
         return {
             state: !!profile,
             data: profile
@@ -35,7 +35,7 @@ export class ProfileController {
     @UseInterceptors(FileInterceptor('avatar'))
     async updateProfile(
         @Body() updateDto: UpdateProfileDto,
-        @User() userDto: GetUserDto,
+        @CurrentUser() user: IUser,
         @UploadedFile(
             new ParseFilePipe({
                 fileIsRequired: false,
@@ -51,7 +51,7 @@ export class ProfileController {
         if (avatar) {
             updateDto.avatar = avatar.filename;
         }
-        let result = await this.profileService.updateProfile(userDto.id, updateDto);
+        let result = await this.profileService.updateProfile(user.id, updateDto);
         return {
             data: result.state,
             ...result
