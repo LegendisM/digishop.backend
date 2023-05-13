@@ -22,6 +22,7 @@ export class TagController {
     async getTags(): Promise<IResponseResult<ITag[]>> {
         let tags = await this.tagService.getTags();
         return {
+            state: true,
             data: tags
         };
     }

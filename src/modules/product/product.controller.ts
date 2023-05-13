@@ -34,6 +34,7 @@ export class ProductController {
     ): Promise<IResponseResult<IProductList>> {
         let products = await this.productService.getProducts(filterDto);
         return {
+            state: true,
             data: products
         };
     }

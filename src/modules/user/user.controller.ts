@@ -20,6 +20,7 @@ export class UserController {
         @CurrentUser() user: IUser
     ): Promise<IResponseResult<any>> {
         return {
+            state: true,
             data: _.pick(
                 user,
                 ['username', 'email', 'avatar', 'roles', 'language']
