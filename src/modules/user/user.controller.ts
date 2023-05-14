@@ -1,10 +1,12 @@
 import _ from "lodash";
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
 import { Auth } from "../auth/decorator/auth.decorator";
 import { CurrentUser } from "./decorator/user.decorator";
 import { IResponseResult } from "src/common/interface/response.interface";
 import { ApiTags } from "@nestjs/swagger";
 import { IUser } from "./interface/user.interface";
+import { USER_PUBLIC_PROPERTIES } from "./constant/user.constant";
+import { UserService } from "./user.service";
 
 @ApiTags('users')
 @Controller({
@@ -13,18 +15,34 @@ import { IUser } from "./interface/user.interface";
 })
 @Auth()
 export class UserController {
-    constructor() { }
+    constructor(
+        private userService: UserService
+    ) { }
 
     @Get('me')
-    async getOwn(
+    async getOwnUser(
         @CurrentUser() user: IUser
     ): Promise<IResponseResult<any>> {
         return {
             state: true,
             data: _.pick(
                 user,
-                ['username', 'email', 'avatar', 'roles', 'language']
+                USER_PUBLIC_PROPERTIES
             )
+        };
+    }
+
+    @Get(':username')
+    async getUserByName(
+        @Param('username') username: string
+    ): Promise<IResponseResult<any>> {
+        let user = await this.userService.getOneUser(
+            { username },
+            USER_PUBLIC_PROPERTIES
+        );
+        return {
+            state: !!user,
+            data: user
         };
     }
 }
