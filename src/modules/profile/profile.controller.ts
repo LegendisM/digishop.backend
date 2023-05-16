@@ -8,6 +8,7 @@ import { CompressedFile } from "src/common/decorator/compress.decorator";
 import { IResponseResult } from "src/common/interface/response.interface";
 import { ApiTags } from "@nestjs/swagger";
 import { IUser } from "../user/interface/user.interface";
+import { IProfileResult } from "./interface/profile.interface";
 
 @ApiTags('profiles')
 @Controller({
@@ -23,7 +24,7 @@ export class ProfileController {
     @Get('me')
     async getOwnProfile(
         @CurrentUser() user: IUser
-    ): Promise<IResponseResult<object>> {
+    ): Promise<IResponseResult<IProfileResult>> {
         let profile = await this.profileService.getProfileById(user.id);
         return {
             state: !!profile,

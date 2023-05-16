@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { UpdateProfileDto } from "./dto/update-profile.dto";
 import { I18nService } from "nestjs-i18n";
+import { IProfileResult } from "./interface/profile.interface";
 
 @Injectable()
 export class ProfileService {
@@ -12,9 +13,14 @@ export class ProfileService {
         private i18nService: I18nService
     ) { }
 
-    async getProfileById(id: string): Promise<object> {
+    async getProfileById(id: string): Promise<IProfileResult> {
         let user = await this.userService.getUserById(id);
-        return user ? _.pick(user, ['username', 'email', 'nationalcode', 'avatar']) : null;
+        return user ? {
+            username: user.username,
+            email: user.email,
+            nationalcode: user.nationalcode,
+            avatar: user.avatar
+        } : null;
     }
 
     async updateProfile(id: string, updateDto: UpdateProfileDto): Promise<{ state: boolean, message: string }> {
