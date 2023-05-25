@@ -1,7 +1,7 @@
 import { InferSubjects } from "@casl/ability";
 import { Product } from "src/modules/product/schema/product.schema";
 import { Support } from "src/modules/support/schema/support.schema";
-import { User } from "src/modules/user/decorator/user.decorator";
+import { User } from "src/modules/user/schema/user.schema";
 
 export type PolicySubjects = InferSubjects<typeof User | typeof Product | typeof Support> | 'User' | 'Product' | 'Support' | 'all';
 

@@ -1,25 +1,33 @@
-version: '3'
+version: '3.9'
 
 services:
-  app:
-    container_name: app
+  main:
+    container_name: digi_main
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
       - mongodb
+      - redis
     env_file:
       - .env
     ports:
-      - "3000:80"
+      - "${MAIN_PORT}:${MAIN_PORT}"
 
   mongodb:
-    container_name: mongodb
+    container_name: digi_mongodb
     image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME= ${MONGODB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD= ${MONGODB_PASSWORD}
     ports:
       - "27017:27017"
     volumes:
       - data:/data/mongodb
+
+  redis:
+    container_name: digi_redis
+    image: redis:alpine
 
 volumes:
   data:

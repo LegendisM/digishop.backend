@@ -1,13 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { IUser } from "../user/interface/user.interface";
-import { GetUserDto } from "../user/dto/get-user.dto";
 import { AbilityBuilder, PureAbility, createMongoAbility } from "@casl/ability";
 import { PolicyAction, PolicySubjects } from "./interface/policy.interface";
 import { Role } from "../user/interface/role.interface";
 
 @Injectable()
 export class PolicyFactory {
-    userAbility(user: IUser | GetUserDto) {
+    userAbility(user: IUser) {
         const { can, build } = new AbilityBuilder<PureAbility<[PolicyAction, PolicySubjects]>>(
             createMongoAbility
         );
