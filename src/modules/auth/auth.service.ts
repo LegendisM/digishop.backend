@@ -4,14 +4,12 @@ import { UserService } from "../user/user.service";
 import { JwtService } from "@nestjs/jwt";
 import { AuthDto } from "./dto/auth.dto";
 import { IAuthJwt, IAuthResult } from "./interface/auth.interface";
-import { I18nService } from "nestjs-i18n";
 
 @Injectable()
 export class AuthService {
     constructor(
         private userService: UserService,
-        private jwtService: JwtService,
-        private i18nService: I18nService
+        private jwtService: JwtService
     ) { }
 
     generateToken(data: IAuthJwt): string {
@@ -34,7 +32,7 @@ export class AuthService {
             message = 'already_username_used';
         }
 
-        return { state, user, token, message: this.i18nService.t(`auth.${message}`) };
+        return { state, user, token, message };
     }
 
     async signin(authDto: AuthDto): Promise<IAuthResult> {
@@ -49,6 +47,6 @@ export class AuthService {
             message = 'invalid_information';
         }
 
-        return { state, user, token, message: this.i18nService.t(`auth.${message}`) };
+        return { state, user, token, message };
     }
 }

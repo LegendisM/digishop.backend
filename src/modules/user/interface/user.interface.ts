@@ -8,5 +8,4 @@ export interface IUser extends Document {
     password: string;
     avatar: string;
     roles: Role[];
-    language: string;
 }

@@ -1,16 +1,16 @@
 import { IsArray, IsEmail, IsEnum, IsOptional, IsString, Length } from "class-validator";
 import { Role } from "../interface/role.interface";
-import { Languages } from "../../../common/interface/language.interface";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class BaseUserDto {
     @ApiProperty({
         required: true,
         minLength: 3,
-        maxLength: 20
+        maxLength: 16,
+        example: 'alexa'
     })
     @IsString()
-    @Length(3, 20)
+    @Length(3, 16)
     username: string;
 
     @ApiProperty({
@@ -40,12 +40,6 @@ export class BaseUserDto {
     })
     @IsArray()
     roles: Role[];
-
-    @ApiProperty({
-        enum: Languages
-    })
-    @IsEnum(Languages)
-    language: string;
 
     @ApiProperty()
     @IsOptional()

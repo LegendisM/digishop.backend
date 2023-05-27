@@ -3,6 +3,7 @@ import { AuthService } from "./auth.service";
 import { AuthDto } from "./dto/auth.dto";
 import { IResponseResult } from "src/common/interface/response.interface";
 import { ApiTags } from "@nestjs/swagger";
+import { I18n, I18nContext } from "nestjs-i18n";
 
 @ApiTags('auth')
 @Controller({
@@ -17,26 +18,28 @@ export class AuthController {
     @Post('signup')
     @HttpCode(HttpStatus.OK)
     async signup(
-        @Body() authDto: AuthDto
+        @Body() authDto: AuthDto,
+        @I18n() i18n: I18nContext
     ): Promise<IResponseResult<{ token: string }>> {
         let { state, token, message } = await this.authService.signup(authDto);
         return {
             state,
             data: { token },
-            message
+            message: i18n.t(`auth.${message}`)
         };
     }
 
     @Post('signin')
     @HttpCode(HttpStatus.OK)
     async signin(
-        @Body() authDto: AuthDto
+        @Body() authDto: AuthDto,
+        @I18n() i18n: I18nContext
     ): Promise<IResponseResult<{ token: string }>> {
         let { state, token, message } = await this.authService.signin(authDto);
         return {
             state,
             data: { token },
-            message
+            message: i18n.t(`auth.${message}`)
         };
     }
 }

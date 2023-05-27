@@ -1,3 +1,4 @@
+import path from "path";
 import { Module } from "@nestjs/common";
 import { ScheduleModule } from "@nestjs/schedule";
 import { MongooseModule } from "@nestjs/mongoose";
@@ -11,10 +12,12 @@ import { PolicyModule } from "../policy/policy.module";
 import { TagModule } from "../tag/tag.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { HeaderResolver, I18nModule } from "nestjs-i18n";
-import path from "path";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 
 @Module({
     imports: [
+        EventEmitterModule.forRoot({ maxListeners: 60 }),
+        ScheduleModule.forRoot(),
         ConfigModule.forRoot({
             isGlobal: true,
             envFilePath: './.env'
@@ -22,12 +25,10 @@ import path from "path";
         I18nModule.forRoot({
             fallbackLanguage: 'en',
             loaderOptions: {
-                path: path.join(__dirname, '../../i18n/'),
-                watch: true
+                path: path.join(__dirname, '../../i18n/')
             },
             resolvers: [HeaderResolver]
         }),
-        ScheduleModule.forRoot(),
         ThrottlerModule.forRoot({
             ttl: 60,
             limit: 40

@@ -1,5 +1,5 @@
 import { FileInterceptor } from "@nestjs/platform-express";
-import { Body, Controller, FileTypeValidator, Get, MaxFileSizeValidator, ParseFilePipe, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { ProfileService } from "./profile.service";
 import { Auth } from "../auth/decorator/auth.decorator";
 import { CurrentUser } from "../user/decorator/user.decorator";
@@ -9,6 +9,7 @@ import { IResponseResult } from "src/common/interface/response.interface";
 import { ApiTags } from "@nestjs/swagger";
 import { IUser } from "../user/interface/user.interface";
 import { IProfileResult } from "./interface/profile.interface";
+import { I18n, I18nContext } from "nestjs-i18n";
 
 @ApiTags('profiles')
 @Controller({
@@ -25,18 +26,30 @@ export class ProfileController {
     async getOwnProfile(
         @CurrentUser() user: IUser
     ): Promise<IResponseResult<IProfileResult>> {
-        let profile = await this.profileService.getProfileById(user.id);
+        let profile = await this.profileService.getProfileByUsername(user.username);
         return {
             state: !!profile,
             data: profile
         };
     }
 
+    @Get(':username')
+    async getProfileByUsername(
+        @Param('username') username: string
+    ): Promise<IResponseResult<IProfileResult>> {
+        let profile = await this.profileService.getProfileByUsername(username);
+        return {
+            state: !!profile,
+            data: profile
+        }
+    }
+
     @Put()
     @UseInterceptors(FileInterceptor('avatar'))
-    async updateProfile(
+    async updateOwnProfile(
         @Body() updateDto: UpdateProfileDto,
         @CurrentUser() user: IUser,
+        @I18n() i18n: I18nContext,
         @UploadedFile(
             new ParseFilePipe({
                 fileIsRequired: false,
@@ -54,8 +67,9 @@ export class ProfileController {
         }
         let result = await this.profileService.updateProfile(user.id, updateDto);
         return {
+            state: result.state,
             data: result.state,
-            ...result
+            message: i18n.t(`profile.${result.message}`)
         };
     }
 }

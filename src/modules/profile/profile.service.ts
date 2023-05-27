@@ -3,18 +3,16 @@ import _ from "lodash";
 import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { UpdateProfileDto } from "./dto/update-profile.dto";
-import { I18nService } from "nestjs-i18n";
 import { IProfileResult } from "./interface/profile.interface";
 
 @Injectable()
 export class ProfileService {
     constructor(
-        private userService: UserService,
-        private i18nService: I18nService
+        private userService: UserService
     ) { }
 
-    async getProfileById(id: string): Promise<IProfileResult> {
-        let user = await this.userService.getUserById(id);
+    async getProfileByUsername(username: string): Promise<IProfileResult> {
+        let user = await this.userService.getOneUser({ username });
         return user ? {
             username: user.username,
             email: user.email,
@@ -23,7 +21,10 @@ export class ProfileService {
         } : null;
     }
 
-    async updateProfile(id: string, updateDto: UpdateProfileDto): Promise<{ state: boolean, message: string }> {
+    async updateProfile(
+        id: string,
+        updateDto: UpdateProfileDto
+    ): Promise<{ state: boolean, message: string }> {
         let message = 'already_information_used', state = false;
         let user = await this.userService.getUserById(id);
         let existUser = await this.userService.getOneUser({
@@ -48,6 +49,6 @@ export class ProfileService {
             message = 'update_success';
         }
 
-        return { state, message: this.i18nService.t(`profile.${message}`) };
+        return { state, message };
     }
 }
