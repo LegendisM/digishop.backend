@@ -7,7 +7,7 @@ import { I18n, I18nContext } from "nestjs-i18n";
 
 @ApiTags('auth')
 @Controller({
-    path: 'auth',
+    path: '/auth',
     version: '1'
 })
 export class AuthController {
@@ -15,7 +15,7 @@ export class AuthController {
         private authService: AuthService
     ) { }
 
-    @Post('signup')
+    @Post('/signup')
     @HttpCode(HttpStatus.OK)
     async signup(
         @Body() authDto: AuthDto,
@@ -29,7 +29,7 @@ export class AuthController {
         };
     }
 
-    @Post('signin')
+    @Post('/signin')
     @HttpCode(HttpStatus.OK)
     async signin(
         @Body() authDto: AuthDto,

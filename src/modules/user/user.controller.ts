@@ -10,7 +10,7 @@ import { UserService } from "./user.service";
 
 @ApiTags('users')
 @Controller({
-    path: 'users',
+    path: '/users',
     version: '1'
 })
 @Auth()
@@ -19,7 +19,7 @@ export class UserController {
         private userService: UserService
     ) { }
 
-    @Get('me')
+    @Get('/me')
     @ApiResponse({ description: `User Public Properties ${USER_PUBLIC_PROPERTIES.join(',')}` })
     async getOwnUser(
         @CurrentUser() user: IUser

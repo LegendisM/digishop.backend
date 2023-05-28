@@ -18,7 +18,7 @@ import { IUser } from "../user/interface/user.interface";
 
 @ApiTags('products')
 @Controller({
-    path: 'products',
+    path: '/products',
     version: '1'
 })
 export class ProductController {
@@ -27,7 +27,7 @@ export class ProductController {
         private policyFactory: PolicyFactory
     ) { }
 
-    @Get()
+    @Get('/')
     @HttpCode(HttpStatus.OK)
     async getProducts(
         @Query() filterDto: GetProductsFilterDto
@@ -39,7 +39,7 @@ export class ProductController {
         };
     }
 
-    @Get(':id')
+    @Get('/:id')
     async getProductById(
         @Param() { id }: IdentifierDto
     ): Promise<IResponseResult<IProduct>> {
@@ -50,7 +50,7 @@ export class ProductController {
         }
     }
 
-    @Post()
+    @Post('/')
     @Roles(Role.ADMIN, Role.MODERATOR)
     @UseInterceptors(FileInterceptor('cover'))
     @HttpCode(HttpStatus.CREATED)
@@ -77,7 +77,7 @@ export class ProductController {
         };
     }
 
-    @Put(':id')
+    @Put('/:id')
     @Roles(Role.ADMIN, Role.MODERATOR)
     async updateProduct(
         @Param() { id }: IdentifierDto,
@@ -96,7 +96,7 @@ export class ProductController {
         };
     }
 
-    @Delete(':id')
+    @Delete('/:id')
     @Roles(Role.ADMIN, Role.MODERATOR)
     async deleteProduct(
         @Param() { id }: IdentifierDto,

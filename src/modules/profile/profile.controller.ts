@@ -13,7 +13,7 @@ import { I18n, I18nContext } from "nestjs-i18n";
 
 @ApiTags('profiles')
 @Controller({
-    path: 'profiles',
+    path: '/profiles',
     version: '1'
 })
 @Auth()
@@ -22,7 +22,7 @@ export class ProfileController {
         private profileService: ProfileService
     ) { }
 
-    @Get('me')
+    @Get('/me')
     async getOwnProfile(
         @CurrentUser() user: IUser
     ): Promise<IResponseResult<IProfileResult>> {
@@ -33,7 +33,7 @@ export class ProfileController {
         };
     }
 
-    @Get(':username')
+    @Get('/:username')
     async getProfileByUsername(
         @Param('username') username: string
     ): Promise<IResponseResult<IProfileResult>> {
@@ -44,7 +44,7 @@ export class ProfileController {
         }
     }
 
-    @Put()
+    @Put('/me')
     @UseInterceptors(FileInterceptor('avatar'))
     async updateOwnProfile(
         @Body() updateDto: UpdateProfileDto,

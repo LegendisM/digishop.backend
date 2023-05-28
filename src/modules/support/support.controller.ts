@@ -15,7 +15,7 @@ import { IUser } from "../user/interface/user.interface";
 
 @ApiTags('supports')
 @Controller({
-    path: 'supports',
+    path: '/supports',
     version: '1'
 })
 @Auth()
@@ -25,7 +25,7 @@ export class SupportController {
         private policyFactory: PolicyFactory
     ) { }
 
-    @Get()
+    @Get('/')
     @Roles(Role.ADMIN)
     async getSupports(): Promise<IResponseResult<ISupport[]>> {
         let supports = await this.supportService.getSupports();
@@ -35,7 +35,7 @@ export class SupportController {
         }
     }
 
-    @Get('me')
+    @Get('/me')
     async getOwnSupports(
         @CurrentUser() user: IUser
     ): Promise<IResponseResult<ISupport[]>> {
@@ -46,7 +46,7 @@ export class SupportController {
         }
     }
 
-    @Get(':id')
+    @Get('/:id')
     async getSupportById(
         @Param() { id }: IdentifierDto,
         @CurrentUser() user: IUser
@@ -62,7 +62,7 @@ export class SupportController {
         };
     }
 
-    @Post()
+    @Post('/')
     async createSupport(
         @Body() createDto: CreateSupportDto,
         @CurrentUser() user: IUser

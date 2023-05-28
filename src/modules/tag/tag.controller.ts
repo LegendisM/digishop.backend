@@ -10,7 +10,7 @@ import { ApiTags } from "@nestjs/swagger";
 
 @ApiTags('tags')
 @Controller({
-    path: 'tags',
+    path: '/tags',
     version: '1'
 })
 export class TagController {
@@ -18,7 +18,7 @@ export class TagController {
         private tagService: TagService
     ) { }
 
-    @Get()
+    @Get('/')
     async getTags(): Promise<IResponseResult<ITag[]>> {
         let tags = await this.tagService.getTags();
         return {
@@ -27,7 +27,7 @@ export class TagController {
         };
     }
 
-    @Post()
+    @Post('/')
     @Roles(Role.ADMIN)
     async createTag(
         @Body() createDto: CreateTagDto
@@ -39,7 +39,7 @@ export class TagController {
         }
     }
 
-    @Delete(':id')
+    @Delete('/:id')
     @Roles(Role.ADMIN)
     async deleteTag(
         @Param() { id }: IdentifierDto
