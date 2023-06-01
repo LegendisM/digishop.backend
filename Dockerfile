@@ -14,4 +14,4 @@ ENV NODE_ENV=production
 
 USER node
 
-CMD [ "node", "dist/main.js" ]
+CMD [ "npm", "run", "start:prod" ]
