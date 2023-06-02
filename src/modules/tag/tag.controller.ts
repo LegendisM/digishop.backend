@@ -20,7 +20,7 @@ export class TagController {
 
     @Get('/')
     async getTags(): Promise<IResponseResult<ITag[]>> {
-        let tags = await this.tagService.getTags();
+        let tags = await this.tagService.findAll();
         return {
             state: true,
             data: tags
@@ -32,7 +32,7 @@ export class TagController {
     async createTag(
         @Body() createDto: CreateTagDto
     ): Promise<IResponseResult<ITag>> {
-        let tag = await this.tagService.createTag(createDto);
+        let tag = await this.tagService.create(createDto);
         return {
             state: !!tag,
             data: tag
@@ -44,7 +44,7 @@ export class TagController {
     async deleteTag(
         @Param() { id }: IdentifierDto
     ): Promise<IResponseResult<ITag>> {
-        let tag = await this.tagService.deleteTag(id);
+        let tag = await this.tagService.delete(id);
         return {
             state: !!tag,
             data: tag

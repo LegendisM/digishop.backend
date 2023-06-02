@@ -17,16 +17,16 @@ export class ProductService {
         private tagService: TagService
     ) { }
 
-    async createProduct(createDto: CreateProductDto, owner: string): Promise<IProduct> {
-        let tags: ITag[] = await this.tagService.getTagsByNames(createDto.tags);
+    async create(createDto: CreateProductDto, owner: string): Promise<IProduct> {
+        let tags: ITag[] = await this.tagService.findAllByNames(createDto.tags);
         return await this.productModel.create({ ...createDto, ...{ owner: owner }, ...{ tags } });
     }
 
-    async getProductById(id: string): Promise<IProduct> {
+    async findById(id: string): Promise<IProduct> {
         return await this.productModel.findById(id);
     }
 
-    async getProducts(
+    async findAll(
         filterDto: GetProductsFilterDto
     ): Promise<IProductList> {
         let { page, limit, owner = '' } = filterDto;
@@ -53,13 +53,13 @@ export class ProductService {
         };
     }
 
-    async updateProduct(id: string, updateDto: UpdateProductDto): Promise<IProduct> {
-        let product = await this.getProductById(id);
+    async update(id: string, updateDto: UpdateProductDto): Promise<IProduct> {
+        let product = await this.findById(id);
         return product.updateOne(updateDto);
     }
 
-    async deleteProduct(id: string): Promise<IProduct> {
-        let product = await this.getProductById(id);
+    async delete(id: string): Promise<IProduct> {
+        let product = await this.findById(id);
         // * unlink cover from storage
         if (product.cover) {
             try {

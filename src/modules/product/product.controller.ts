@@ -32,7 +32,7 @@ export class ProductController {
     async getProducts(
         @Query() filterDto: GetProductsFilterDto
     ): Promise<IResponseResult<IProductList>> {
-        let products = await this.productService.getProducts(filterDto);
+        let products = await this.productService.findAll(filterDto);
         return {
             state: true,
             data: products
@@ -43,7 +43,7 @@ export class ProductController {
     async getProductById(
         @Param() { id }: IdentifierDto
     ): Promise<IResponseResult<IProduct>> {
-        let product = await this.productService.getProductById(id);
+        let product = await this.productService.findById(id);
         return {
             state: !!product,
             data: product
@@ -70,7 +70,7 @@ export class ProductController {
         cover: Express.Multer.File
     ): Promise<IResponseResult<IProduct>> {
         createDto.cover = cover.filename;
-        let product = await this.productService.createProduct(createDto, user.id);
+        let product = await this.productService.create(createDto, user.id);
         return {
             state: !!product,
             data: product
@@ -84,12 +84,12 @@ export class ProductController {
         @Body() updateDto: UpdateProductDto,
         @CurrentUser() user: IUser
     ): Promise<IResponseResult<boolean>> {
-        let product = await this.productService.getProductById(id);
+        let product = await this.productService.findById(id);
         // * check policy
         if (this.policyFactory.userAbility(user).cannot(PolicyAction.Update, product)) {
             throw new ForbiddenException();
         }
-        product = await this.productService.updateProduct(id, updateDto);
+        product = await this.productService.update(id, updateDto);
         return {
             state: !!product,
             data: !!product
@@ -102,12 +102,12 @@ export class ProductController {
         @Param() { id }: IdentifierDto,
         @CurrentUser() user: IUser
     ): Promise<IResponseResult<boolean>> {
-        let product = await this.productService.getProductById(id);
+        let product = await this.productService.findById(id);
         // * ckeck policy
         if (this.policyFactory.userAbility(user).cannot(PolicyAction.Delete, product)) {
             throw new ForbiddenException();
         }
-        product = await this.productService.deleteProduct(id);
+        product = await this.productService.delete(id);
         return {
             state: !!product,
             data: !!product

@@ -12,23 +12,23 @@ export class SupportService {
         @InjectModel(Support.name) private supportModel: Model<Support>
     ) { }
 
-    async createSupport(createDto: CreateSupportDto, owner: string): Promise<ISupport> {
+    async create(createDto: CreateSupportDto, owner: string): Promise<ISupport> {
         return await this.supportModel.create({
             owner,
             messages: [{ owner, subject: createDto.subject, content: createDto.content }]
         });
     }
 
-    async getSupports(): Promise<ISupport[]> {
-        return await this.supportModel.find().sort({ updatedAt: -1 });
-    }
-
-    async getSupportById(id: string): Promise<ISupport> {
+    async findById(id: string): Promise<ISupport> {
         let support = await this.supportModel.findById(id);
         return support;
     }
 
-    async getSupportsByOwner(owner: string): Promise<ISupport[]> {
+    async findAll(): Promise<ISupport[]> {
+        return await this.supportModel.find().sort({ updatedAt: -1 });
+    }
+
+    async findAllByOwner(owner: string): Promise<ISupport[]> {
         return await this.supportModel.find({ owner });
     }
 }

@@ -14,7 +14,7 @@ export class UserService {
         private eventEmitter: EventEmitter2
     ) { }
 
-    async createUser(definition: CreateUserDto): Promise<IUser> {
+    async create(definition: CreateUserDto): Promise<IUser> {
         let user = await this.userModel.create(definition);
         if (user) {
             this.eventEmitter.emit(UserEvents.USER_CREATED, user);
@@ -22,21 +22,21 @@ export class UserService {
         return user;
     }
 
-    async getOneUser(
+    async findOne(
         filter: FilterQuery<User>,
         projection: IUser | object = {}
     ): Promise<IUser> {
         return await this.userModel.findOne(filter, projection);
     }
 
-    async getUserById(
+    async findById(
         id: string,
         projection: IUser | object = {}
     ): Promise<IUser> {
         return await this.userModel.findById(id, projection);
     }
 
-    async getUsers(
+    async findAll(
         filter: FilterQuery<User>,
         projection: IUser | object = {},
         option: object = {}
@@ -44,14 +44,14 @@ export class UserService {
         return await this.userModel.find(filter, projection, option);
     }
 
-    async updateOneUser(
+    async updateOne(
         filter: FilterQuery<User>,
         update: object | IUser
     ): Promise<any> {
         return await this.userModel.updateOne(filter, update);
     }
 
-    async updateManyUsers(
+    async updateMany(
         filter: FilterQuery<User>,
         update: object | IUser
     ): Promise<any> {

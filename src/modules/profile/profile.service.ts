@@ -11,8 +11,8 @@ export class ProfileService {
         private userService: UserService
     ) { }
 
-    async getProfileByUsername(username: string): Promise<IProfileResult> {
-        let user = await this.userService.getOneUser({ username });
+    async find(username: string): Promise<IProfileResult> {
+        let user = await this.userService.findOne({ username });
         return user ? {
             username: user.username,
             email: user.email,
@@ -21,13 +21,13 @@ export class ProfileService {
         } : null;
     }
 
-    async updateProfile(
+    async update(
         id: string,
         updateDto: UpdateProfileDto
     ): Promise<{ state: boolean, message: string }> {
         let message = 'already_information_used', state = false;
-        let user = await this.userService.getUserById(id);
-        let existUser = await this.userService.getOneUser({
+        let user = await this.userService.findById(id);
+        let existUser = await this.userService.findOne({
             $and: [
                 { $or: [{ username: updateDto.username }, { email: updateDto.email }, { nationalcode: updateDto.nationalcode }] },
                 { _id: { $ne: id } }

@@ -26,7 +26,7 @@ export class ProfileController {
     async getOwnProfile(
         @CurrentUser() user: IUser
     ): Promise<IResponseResult<IProfileResult>> {
-        let profile = await this.profileService.getProfileByUsername(user.username);
+        let profile = await this.profileService.find(user.username);
         return {
             state: !!profile,
             data: profile
@@ -37,7 +37,7 @@ export class ProfileController {
     async getProfileByUsername(
         @Param('username') username: string
     ): Promise<IResponseResult<IProfileResult>> {
-        let profile = await this.profileService.getProfileByUsername(username);
+        let profile = await this.profileService.find(username);
         return {
             state: !!profile,
             data: profile
@@ -65,7 +65,7 @@ export class ProfileController {
         if (avatar) {
             updateDto.avatar = avatar.filename;
         }
-        let result = await this.profileService.updateProfile(user.id, updateDto);
+        let result = await this.profileService.update(user.id, updateDto);
         return {
             state: result.state,
             data: result.state,

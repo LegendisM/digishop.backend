@@ -28,7 +28,7 @@ export class SupportController {
     @Get('/')
     @Roles(Role.ADMIN)
     async getSupports(): Promise<IResponseResult<ISupport[]>> {
-        let supports = await this.supportService.getSupports();
+        let supports = await this.supportService.findAll();
         return {
             state: !!supports,
             data: supports
@@ -39,7 +39,7 @@ export class SupportController {
     async getOwnSupports(
         @CurrentUser() user: IUser
     ): Promise<IResponseResult<ISupport[]>> {
-        let supports = await this.supportService.getSupportsByOwner(user.id);
+        let supports = await this.supportService.findAllByOwner(user.id);
         return {
             state: !!supports,
             data: supports
@@ -51,7 +51,7 @@ export class SupportController {
         @Param() { id }: IdentifierDto,
         @CurrentUser() user: IUser
     ): Promise<IResponseResult<ISupport>> {
-        let support = await this.supportService.getSupportById(id);
+        let support = await this.supportService.findById(id);
         // * check policy
         if (this.policyFactory.userAbility(user).cannot(PolicyAction.Read, support)) {
             throw new ForbiddenException();
@@ -67,7 +67,7 @@ export class SupportController {
         @Body() createDto: CreateSupportDto,
         @CurrentUser() user: IUser
     ): Promise<IResponseResult<ISupport>> {
-        let support = await this.supportService.createSupport(createDto, user.id);
+        let support = await this.supportService.create(createDto, user.id);
         return {
             state: !!support,
             data: support
