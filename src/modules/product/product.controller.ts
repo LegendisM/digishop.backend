@@ -15,6 +15,7 @@ import { IdentifierDto } from "src/common/dto/identifier.dto";
 import { IResponseResult } from "src/common/interface/response.interface";
 import { ApiTags } from "@nestjs/swagger";
 import { IUser } from "../user/interface/user.interface";
+import { ParseUploadedFile } from "src/common/pipe/parse-uploaded-file.pipe";
 
 @ApiTags('products')
 @Controller({
@@ -57,17 +58,8 @@ export class ProductController {
     async createProduct(
         @Body() createDto: CreateProductDto,
         @CurrentUser() user: IUser,
-        @UploadedFile(
-            new ParseFilePipe({
-                fileIsRequired: true,
-                validators: [
-                    new MaxFileSizeValidator({ maxSize: 1024 * 1000 * 8 }),
-                    new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
-                ],
-            }),
-        )
-        @CompressedFile({ width: 800, quality: 80 })
-        cover: Express.Multer.File
+        @UploadedFile(new ParseUploadedFile())
+        @CompressedFile() cover: Express.Multer.File
     ): Promise<IResponseResult<IProduct>> {
         createDto.cover = cover.filename;
         let product = await this.productService.create(createDto, user.id);

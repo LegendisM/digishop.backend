@@ -10,6 +10,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { IUser } from "../user/interface/user.interface";
 import { IProfileResult } from "./interface/profile.interface";
 import { I18n, I18nContext } from "nestjs-i18n";
+import { ParseUploadedFile } from "src/common/pipe/parse-uploaded-file.pipe";
 
 @ApiTags('profiles')
 @Controller({
@@ -50,17 +51,8 @@ export class ProfileController {
         @Body() updateDto: UpdateProfileDto,
         @CurrentUser() user: IUser,
         @I18n() i18n: I18nContext,
-        @UploadedFile(
-            new ParseFilePipe({
-                fileIsRequired: false,
-                validators: [
-                    new MaxFileSizeValidator({ maxSize: 1024 * 1000 * 5 }),
-                    new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
-                ],
-            }),
-        )
-        @CompressedFile({ width: 250, quality: 75 })
-        avatar: Express.Multer.File
+        @UploadedFile(new ParseUploadedFile())
+        @CompressedFile({ width: 250, quality: 80, compressionLevel: 8 }) avatar: Express.Multer.File
     ): Promise<IResponseResult<boolean>> {
         if (avatar) {
             updateDto.avatar = avatar.filename;

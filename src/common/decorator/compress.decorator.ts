@@ -1,24 +1,31 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import sharp from 'sharp';
+import { ExecutionContext, InternalServerErrorException, createParamDecorator } from "@nestjs/common";
+import { extname } from "path";
+import sharp, { FormatEnum } from "sharp";
 
 export const CompressedFile = createParamDecorator(
-    async (options: { width?: number; quality?: number }, context: ExecutionContext) => {
-        const req = context.switchToHttp().getRequest();
+    async (
+        option: { width: number, quality: number, compressionLevel: number } = { width: 800, quality: 80, compressionLevel: 8 },
+        context: ExecutionContext
+    ) => {
+        const request = context.switchToHttp().getRequest();
+        const file: Express.Multer.File = request.file;
 
-        if (!req.file || !req.file.mimetype.startsWith('image/') || !req.file.path) {
-            return req.file;
+        if (!file || !file.path || !file.mimetype.startsWith('image/')) {
+            return file;
         }
+
+        const extension = extname(file.originalname).replace('.', '');
 
         try {
-            const buffer = await sharp(req.file.path)
-                .resize(options?.width || 800)
-                .jpeg({ quality: options?.quality || 80 })
+            const buffer = await sharp(file.path)
+                .resize(option.width)
+                .toFormat(extension as keyof FormatEnum, { quality: option.quality, compressionLevel: option.compressionLevel })
                 .toBuffer();
-            await sharp(buffer).toFile(req.file.path);
-        } catch (err) {
-            console.error(err);
+            await sharp(buffer).toFile(file.path);
+        } catch (error) {
+            throw new InternalServerErrorException();
         }
 
-        return req.file;
-    },
+        return file;
+    }
 );
