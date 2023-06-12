@@ -4,7 +4,7 @@ import sharp, { FormatEnum } from "sharp";
 
 export const CompressedFile = createParamDecorator(
     async (
-        option: { width: number, quality: number, compressionLevel: number } = { width: 800, quality: 80, compressionLevel: 8 },
+        option: { width: number, quality: number, compressionLevel: number } = { width: null, quality: 80, compressionLevel: 8 },
         context: ExecutionContext
     ) => {
         const request = context.switchToHttp().getRequest();
@@ -17,10 +17,16 @@ export const CompressedFile = createParamDecorator(
         const extension = extname(file.originalname).replace('.', '');
 
         try {
-            const buffer = await sharp(file.path)
-                .resize(option.width)
-                .toFormat(extension as keyof FormatEnum, { quality: option.quality, compressionLevel: option.compressionLevel })
-                .toBuffer();
+            const image = await sharp(file.path)
+            const metadata = await image.metadata();
+            const oversized = metadata.width > 1080;
+            if (oversized || option.width) {
+                image.resize(oversized ? 1080 : option.width);
+            }
+            const buffer = await image.toFormat(extension as keyof FormatEnum, {
+                quality: option.quality,
+                compressionLevel: option.compressionLevel
+            }).toBuffer();
             await sharp(buffer).toFile(file.path);
         } catch (error) {
             throw new InternalServerErrorException();
