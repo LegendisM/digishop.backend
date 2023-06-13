@@ -16,7 +16,7 @@ services:
 
   mongodb:
     container_name: digi_mongodb
-    image: mongo
+    image: mongo:4.4.15
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
