@@ -23,8 +23,9 @@ services:
       - MONGODB_USERNAME=${MONGODB_USER}
       - MONGODB_PASSWORD=${MONGODB_PASSWORD}
       - MONGODB_DATABASE=${MONGODB_NAME}
+      - MONGODB_PORT=${MONGODB_PORT}
     ports:
-      - "27017:27017"
+      - "4{MONGODB_PORT}:${MONGODB_PORT}"
     volumes:
       - data:/bitnami/mongodb/data
 
