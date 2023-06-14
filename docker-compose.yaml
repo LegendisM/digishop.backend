@@ -13,6 +13,8 @@ services:
       - .env
     ports:
       - "${MAIN_PORT}:${MAIN_PORT}"
+    volumes:
+      - uploads:/public/uploads
 
   mongodb:
     container_name: digi_mongodb
@@ -35,4 +37,6 @@ services:
 
 volumes:
   data:
+    driver: local
+  uploads:
     driver: local
