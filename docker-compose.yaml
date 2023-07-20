@@ -14,7 +14,7 @@ services:
     ports:
       - "${MAIN_PORT}:${MAIN_PORT}"
     volumes:
-      - uploads:/public/uploads
+      - uploads:/usr/src/app/public/uploads
 
   mongodb:
     container_name: digi_mongodb
