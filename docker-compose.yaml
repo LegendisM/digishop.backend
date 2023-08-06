@@ -27,7 +27,7 @@ services:
       - MONGODB_DATABASE=${MONGODB_NAME}
       - MONGODB_PORT_NUMBER=${MONGODB_PORT}
     ports:
-      - "4{MONGODB_PORT}:${MONGODB_PORT}"
+      - "${MONGODB_PORT}:${MONGODB_PORT}"
     volumes:
       - data:/bitnami/mongodb/data
 
